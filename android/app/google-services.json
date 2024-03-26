@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "266237587921",
+    "project_id": "ct240doan-49e91",
+    "storage_bucket": "ct240doan-49e91.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266237587921:android:8371cca73bfaf97aa8f0f0",
+        "android_client_info": {
+          "package_name": "com.example.ct240_doan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNx6K2RDXl6U0MwottOJTSdEDHZC10xZs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
