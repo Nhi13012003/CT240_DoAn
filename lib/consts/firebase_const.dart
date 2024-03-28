@@ -11,3 +11,4 @@ User? currentUser = auth.currentUser;
 const collectionUser = "Users";
 const collectionMessage = "Messages";
 const collectionFriend = "Friends";
+const collectionDuAn = "DuAn";

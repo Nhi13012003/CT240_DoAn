@@ -7,7 +7,6 @@ import 'package:ct240_doan/utils/app_layout.dart';
 Widget AppBarComponent(GlobalKey<ScaffoldState> key) {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.purple[900],
     ),
     height: AppLayout.getHeight(40),
     child: Row(
@@ -22,7 +21,7 @@ Widget AppBarComponent(GlobalKey<ScaffoldState> key) {
                   contentPadding: EdgeInsets.only(top: 20),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.search_rounded),
-                  hintText: "Tìm kiếm bạn bè",
+                  hintText: "Tìm kiếm dự án hoặc mẫu",
                   hintStyle: GoogleFonts.nunito(fontSize: 15)),
             ),
           ),
@@ -33,7 +32,7 @@ Widget AppBarComponent(GlobalKey<ScaffoldState> key) {
           },
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.purple[900],
+                color: Colors.blue[900],
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(100),
                     bottomRight: Radius.circular(100))),

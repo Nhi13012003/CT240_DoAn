@@ -23,24 +23,21 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -50,19 +47,31 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCAMWsoDyaC0KT-tyKbUZkbN3uClA9pZak',
-    appId: '1:84154643940:web:1bbce07284b57fb93003f1',
-    messagingSenderId: '84154643940',
-    projectId: 'appchat-f2625',
-    authDomain: 'appchat-f2625.firebaseapp.com',
-    storageBucket: 'appchat-f2625.appspot.com',
+    apiKey: 'AIzaSyB9ooXIaUigJgjIcV8nLzMsQSd-Hg8BiHo',
+    appId: '1:266237587921:web:401866eed0dbbc40a8f0f0',
+    messagingSenderId: '266237587921',
+    projectId: 'ct240doan-49e91',
+    authDomain: 'ct240doan-49e91.firebaseapp.com',
+    storageBucket: 'ct240doan-49e91.appspot.com',
+    measurementId: 'G-TS7FHECTF5',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDgT9MxW-BzbCKFu8DMeQBpGf5BPhxQFDw',
-    appId: '1:84154643940:android:a433a03f3627908d3003f1',
-    messagingSenderId: '84154643940',
-    projectId: 'appchat-f2625',
-    storageBucket: 'appchat-f2625.appspot.com',
+    apiKey: 'AIzaSyCNx6K2RDXl6U0MwottOJTSdEDHZC10xZs',
+    appId: '1:266237587921:android:8371cca73bfaf97aa8f0f0',
+    messagingSenderId: '266237587921',
+    projectId: 'ct240doan-49e91',
+    storageBucket: 'ct240doan-49e91.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAskmQNk4Q12VH3RAqpuW9BfAFJOunY8Gs',
+    appId: '1:266237587921:ios:3685b1ddac49074ca8f0f0',
+    messagingSenderId: '266237587921',
+    projectId: 'ct240doan-49e91',
+    storageBucket: 'ct240doan-49e91.appspot.com',
+    androidClientId: '266237587921-ua53ha5asl99eng6fvcvtuifqoqlmoi8.apps.googleusercontent.com',
+    iosClientId: '266237587921-5bijjibdj7g1l6f5lr4b9dgls3jstkqn.apps.googleusercontent.com',
+    iosBundleId: 'com.example.ct240Doan',
   );
 }
