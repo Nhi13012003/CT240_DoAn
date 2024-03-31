@@ -272,7 +272,7 @@ class DuAnScreenState extends State<DuAnScreen> {
                     child: Icon(Icons.folder)),
                 SpeedDialChild(
                     onTap: () {
-                      Get.to(()=>TaoMauScreen());
+                      Get.to(()=>TaoMauScreen(currentStream: currentStream,));
                     },
                     label: "Tạo mẫu",
                     child: Icon(Icons.file_copy))

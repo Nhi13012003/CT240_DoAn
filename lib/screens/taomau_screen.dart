@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ct240_doan/apis/mau_api.dart';
 import 'package:ct240_doan/components/imagepicker_dialog_component.dart';
 import 'package:ct240_doan/controllers/imagepicker_controller.dart';
+import 'package:ct240_doan/details/mau.dart';
 import 'package:ct240_doan/utils/app_layout.dart';
+import 'package:ct240_doan/utils/format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +14,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TaoMauScreen extends StatefulWidget {
+  CollectionReference<Map<dynamic, dynamic>>? currentStream;
+
+  TaoMauScreen({super.key, required this.currentStream});
+
   @override
   State<StatefulWidget> createState() {
     return TaoMauScreenState();
@@ -25,6 +33,8 @@ class TaoMauScreenState extends State<TaoMauScreen> {
   final moTaController = TextEditingController();
   final ghiChuController = TextEditingController();
   final imagePickerController = Get.put(ImagePickerController());
+  List<String> listPath = [];
+  List<String> listName = [];
 
   @override
   void initState() {
@@ -33,7 +43,6 @@ class TaoMauScreenState extends State<TaoMauScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> listPath = [];
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
@@ -78,11 +87,11 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                               controller: tenMauController,
                               decoration: InputDecoration(
                                   contentPadding:
-                                      EdgeInsets.only(bottom: 5, left: 10),
+                                  EdgeInsets.only(bottom: 5, left: 10),
                                   labelText: "Tên mẫu",
                                   border: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.blue),
+                                      BorderSide(color: Colors.blue),
                                       borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
@@ -91,15 +100,23 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                           ),
                           Container(
                             height: AppLayout.getHeight(30),
-                            child: TextFormField(
+                            child: TextField(
                               controller: ngaylayMauController,
+                              onTap: () {
+                                selectedDate(context, ngaylayMauController);
+                              },
                               decoration: InputDecoration(
+                                  prefixIconColor: MaterialStateColor
+                                      .resolveWith((states) =>
+                                  states.contains(MaterialState.focused)
+                                      ? Colors.deepPurple
+                                      : Colors.grey),
                                   contentPadding:
-                                      EdgeInsets.only(bottom: 5, left: 10),
+                                  EdgeInsets.only(bottom: 5, left: 10),
                                   labelText: "Ngày lấy mẫu",
                                   border: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.blue),
+                                      BorderSide(color: Colors.blue),
                                       borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
@@ -112,11 +129,11 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                               controller: diaDiemController,
                               decoration: InputDecoration(
                                   contentPadding:
-                                      EdgeInsets.only(bottom: 5, left: 10),
+                                  EdgeInsets.only(bottom: 5, left: 10),
                                   labelText: "Địa điểm",
                                   border: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.blue),
+                                      BorderSide(color: Colors.blue),
                                       borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
@@ -129,11 +146,11 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                               controller: loaiMauController,
                               decoration: InputDecoration(
                                   contentPadding:
-                                      EdgeInsets.only(bottom: 5, left: 10),
+                                  EdgeInsets.only(bottom: 5, left: 10),
                                   labelText: "Loại mẫu",
                                   border: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.blue),
+                                      BorderSide(color: Colors.blue),
                                       borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
@@ -144,31 +161,29 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                             children: [
                               Expanded(
                                 child: Container(
-                                    decoration:
-                                        BoxDecoration(border: Border.all()),
-                                    height: AppLayout.getHeight(150),
-                                    child: Obx(
-                                      () => ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          itemCount: imagePickerController
-                                              .listPath.value.length,
-                                          itemBuilder: (context, index) {
-                                            return Row(
-                                              children: [
-                                                Text(index.toString()),
-                                                Icon(Icons.image),
-                                                Expanded(
-                                                  child: Text(
-                                                    imagePickerController
-                                                        .listPath.value[index],
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          }),
-                                    )),
+                                  decoration:
+                                  BoxDecoration(border: Border.all()),
+                                  height: AppLayout.getHeight(150),
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: listName.length,
+                                      itemBuilder: (context, index) {
+                                        return Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .spaceAround,
+                                          children: [
+                                            Text(index.toString()),
+                                            Icon(Icons.image),
+                                            Expanded(
+                                              child: Text(
+                                                listName[index],
+                                                overflow:
+                                                TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      }),),
                               ),
                               SizedBox(
                                 width: AppLayout.getWidth(10),
@@ -176,8 +191,16 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                               Column(
                                 children: [
                                   InkWell(
-                                    onTap: () {
-                                      Get.dialog(ImagePickerDialog(context));
+                                    onTap: () async {
+                                      await Get.dialog(
+                                          ImagePickerDialog(context));
+                                      setState(() {
+                                        if (imagePickerController.imgPath
+                                            .value != '')
+                                          listPath.add(
+                                              imagePickerController.imgPath
+                                                  .value);
+                                      });
                                     },
                                     child: CircleAvatar(
                                       child: Icon(Icons.camera),
@@ -219,11 +242,29 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue[900]),
-                              onPressed: () {},
+                              onPressed: () {
+                                String id = tenMauController.text.hashCode
+                                    .toString();
+                                listPath.forEach((element) {
+                                });
+                                MauDetail mauDetail = MauDetail(
+                                    id,
+                                    "Phạm Văn Nhí",
+                                    tenMauController.text.toString(),
+                                    ngaylayMauController.text.toString(),
+                                    listPath,
+                                    diaDiemController.text.toString(),
+                                    loaiMauController.text.toString(),
+                                    moTaController.text.toString(),
+                                    ghiChuController.text.toString());
+                                MauAPI.createMau(mauDetail,
+                                    widget.currentStream);
+                                Get.back();
+                              },
                               child: Text(
                                 "Tạo mẫu",
                                 style:
-                                    GoogleFonts.openSans(color: Colors.white),
+                                GoogleFonts.openSans(color: Colors.white),
                               )),
                           SizedBox(
                             height: AppLayout.getHeight(10),
@@ -235,5 +276,16 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                 ),
               ),
             )));
+  }
+
+  Future<void> selectedDate(BuildContext context, controller) async {
+    final DateTime? pickedDate = await showDatePicker(context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2002),
+        lastDate: DateTime.now(),
+        locale: Locale('vi', "VN"));
+    if (pickedDate != null) {
+      controller.text = pickedDate.toString().split(" ")[0];
+    }
   }
 }

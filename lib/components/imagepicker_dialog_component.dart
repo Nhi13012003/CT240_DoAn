@@ -7,12 +7,14 @@ import 'package:image_picker/image_picker.dart';
 
 Widget ImagePickerDialog(context) {
   final imagePickerController = Get.put(ImagePickerController());
+
   var listTitle = ["máy ảnh", "thư viện", "hủy"];
   var icons = [
     Icons.camera_alt_rounded,
     Icons.photo_size_select_actual_outlined,
     Icons.cancel_outlined
   ];
+  imagePickerController.imgPath.value='';
   return Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     child: Container(
@@ -37,8 +39,10 @@ Widget ImagePickerDialog(context) {
                         final pickedFile = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
                         if (pickedFile != null)
-                          imagePickerController.listPath.value
-                              .add(pickedFile.path);
+                        {
+                          imagePickerController.imgPath.value=pickedFile.path;
+                          imagePickerController.imgName.value=pickedFile.name;
+                        }
                         Get.back();
                         break;
                       case 2:
