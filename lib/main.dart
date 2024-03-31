@@ -1,6 +1,7 @@
 import 'package:ct240_doan/screens/duan_screen.dart';
 import 'package:ct240_doan/screens/flash_screen.dart';
 import 'package:ct240_doan/screens/home_screen.dart';
+import 'package:ct240_doan/screens/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +27,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: HomeScreen()),
+      home: Scaffold(body: LoginPage()),
     );
   }
 }
