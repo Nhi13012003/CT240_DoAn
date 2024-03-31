@@ -14,7 +14,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.white, statusBarIconBrightness: Brightness.dark));
   runApp(const MainApp());
 }
@@ -35,8 +35,6 @@ class MainApp extends StatelessWidget {
         const Locale('vi', 'VN'), // Tiếng Việt
         // Các ngôn ngữ khác nếu cần
       ],
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(body: HomeScreen()),
     );
   }
 }

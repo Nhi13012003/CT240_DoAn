@@ -55,6 +55,8 @@ dependencies:
   googledrivehandler: ^1.0.7
   intl: ^0.18.1
   image_picker: ^1.0.7
+  ionicons: ^0.2.2
+  sliding_up_panel: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:
