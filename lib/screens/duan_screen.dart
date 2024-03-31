@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ct240_doan/apis/api.dart';
 import 'package:ct240_doan/apis/duan_api.dart';
 import 'package:ct240_doan/components/folder_component.dart';
+import 'package:ct240_doan/components/sample_components.dart';
 import 'package:ct240_doan/consts/firebase_const.dart';
 import 'package:ct240_doan/details/duan.dart';
+import 'package:ct240_doan/details/mau.dart';
+import 'package:ct240_doan/screens/sample_detail.dart';
 import 'package:ct240_doan/screens/taomau_screen.dart';
 import 'package:ct240_doan/utils/format.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +19,8 @@ import '../apis/folder_api.dart';
 import '../utils/app_layout.dart';
 
 class DuAnScreen extends StatefulWidget {
+  const DuAnScreen({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return DuAnScreenState();
@@ -24,25 +29,36 @@ class DuAnScreen extends StatefulWidget {
 
 class DuAnScreenState extends State<DuAnScreen> {
   CollectionReference<Map<dynamic, dynamic>>? currentStream;
+  CollectionReference<Map<dynamic, dynamic>>? newStream;
   DuAnDetail duAnDetail = Get.arguments;
   List<String> listFolder = [];
   List<DuAnDetail> listId = [];
+
   final folderController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    currentStream=firebaseFirestore.collection(collectionDuAn).doc(duAnDetail.id).
-        collection(duAnDetail.tenDuAn);
+    currentStream = firebaseFirestore
+        .collection(collectionDuAn)
+        .doc(duAnDetail.id)
+        .collection(duAnDetail.tenDuAn);
     listFolder.add(duAnDetail.tenDuAn);
   }
-  void updateStream()
-  {
-    listId.forEach((element) {
+
+  void updateStream() {
+    for (var element in listId) {
       setState(() {
-        currentStream =currentStream!.doc(element.id).collection(element.tenDuAn);
+        currentStream =
+            currentStream!.doc(element.id).collection(element.tenDuAn);
       });
-    });
+    }
   }
+
+  void refreshStream(List<dynamic> listMau) {
+    print('Hello các quần què');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -53,7 +69,7 @@ class DuAnScreenState extends State<DuAnScreen> {
               title: Row(
                 children: [
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back,
                       color: Colors.white,
                     ),
@@ -76,34 +92,33 @@ class DuAnScreenState extends State<DuAnScreen> {
               children: [
                 SingleChildScrollView(
                   child: Container(
-                    alignment:  Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
                     height: AppLayout.getHeight(30),
                     child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-
                         itemBuilder: (context, index) {
                           return InkWell(
-                            onTap: ()
-                            {
+                            onTap: () {
                               setState(() {
                                 updateStream();
                               });
                             },
                             child: Container(
                               child: Center(
-                                child: Text(listFolder[index],
-                                style: GoogleFonts.openSans(
-                                  color: Colors.blue[900],
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17
-                                ),),
+                                child: Text(
+                                  listFolder[index],
+                                  style: GoogleFonts.openSans(
+                                      color: Colors.blue[900],
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17),
+                                ),
                               ),
                             ),
                           );
                         },
                         separatorBuilder: (context, index) {
-                          return Center(
+                          return const Center(
                             child: Icon(
                               Icons.arrow_forward_ios_outlined,
                               size: 10,
@@ -118,40 +133,65 @@ class DuAnScreenState extends State<DuAnScreen> {
                 ),
                 SingleChildScrollView(
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
                     height: AppLayout.getHeight(500),
                     child: StreamBuilder(
-                      stream:currentStream!.snapshots(),
-                      builder: (context,snapshot)
-                      {
-                        List<DuAnDetail> list=[];
+                      stream: currentStream!.snapshots(),
+                      builder: (context, snapshot) {
+                        List<DuAnDetail> list = [];
+                        List<MauDetail> listMau = [];
+                        late dynamic result = 'Hello';
 
-                        if(snapshot.hasData&&snapshot.data!=null)
-                          {
-                            final dataDuAn = snapshot.data!.docs;
-                            dataDuAn.forEach((element) {
-                              list.add(DuAnDetail.fromSnapshot(element as DocumentSnapshot<Map<String, dynamic>>));
-                            });
-                            return ListView.builder(
-                              itemCount: list.length,
-                              itemBuilder: (context,index)
-                              {
-                                return InkWell(
-                                  onTap: (){
+                        if (snapshot.hasData && snapshot.data != null) {
+                          final dataDuAn = snapshot.data!.docs;
+                          for (var element in dataDuAn) {
+                            DuAnDetail detail = DuAnDetail.fromSnapshot(element
+                                as DocumentSnapshot<Map<String, dynamic>>);
+                            list.add(detail);
+
+                            // Chỉ chuyển đổi thành MauDetail nếu type != 'Folder'
+                            if (detail.type != 'Folder') {
+                              listMau.add(MauDetail.fromSnapshot(element
+                                  as DocumentSnapshot<Map<String, dynamic>>));
+                            }
+                          }
+                          return ListView.builder(
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                  onTap: () {
                                     setState(() {
                                       listId.add(list[index]);
 
                                       listFolder.add(list[index].tenDuAn);
+
+                                      if (list[index].type != 'Folder') {
+                                        result = Get.to(
+                                            () => const SampleDetail(),
+                                            arguments: [
+                                              index,
+                                              listMau,
+                                              duAnDetail.tenDuAn,
+                                            ]);
+                                        print(result);
+                                      }
+                                      if (result == 'Hello') {
+                                        updateStream();
+                                      }
                                     });
-                                    updateStream();
                                   },
-                                  child: FolderComponent(list[index].tenDuAn,list[index].ngayTaoDuAn,
-                                  list[index].type),
-                                );
-                              },
-                            );
-                          }
-                        else return Container();
+                                  child: list[index].type == 'Folder'
+                                      ? FolderComponent(
+                                          list[index].tenDuAn,
+                                          list[index].ngayTaoDuAn,
+                                          list[index].type,
+                                          list[index].id)
+                                      : SampleComponent(listMau[index]));
+                            },
+                          );
+                        } else {
+                          return Container();
+                        }
                       },
                     ),
                   ),
@@ -169,17 +209,17 @@ class DuAnScreenState extends State<DuAnScreen> {
                             return StatefulBuilder(
                                 builder: (context, setStateForDialog) {
                               return AlertDialog(
-                                shape: RoundedRectangleBorder(
+                                shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15))),
                                 scrollable: true,
-                                title: Center(
+                                title: const Center(
                                   child: Text(
                                     "Thư mục mới",
                                     style: TextStyle(fontSize: 20),
                                   ),
                                 ),
-                                contentPadding: EdgeInsets.all(20),
+                                contentPadding: const EdgeInsets.all(20),
                                 content: Column(
                                   children: [
                                     SizedBox(
@@ -187,12 +227,13 @@ class DuAnScreenState extends State<DuAnScreen> {
                                       child: TextField(
                                         controller: folderController,
                                         decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.only(
-                                                bottom: 10, left: 10),
+                                            contentPadding:
+                                                const EdgeInsets.only(
+                                                    bottom: 10, left: 10),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
-                                                borderSide: BorderSide(
+                                                borderSide: const BorderSide(
                                                     color: Colors.blue)),
                                             hintText: "Nhập tên thư mục mới",
                                             enabledBorder: OutlineInputBorder(
@@ -224,7 +265,9 @@ class DuAnScreenState extends State<DuAnScreen> {
                                               color: Colors.white),
                                         ),
                                         onPressed: () async {
-                                          String id=folderController.text.hashCode.toString();
+                                          String id = folderController
+                                              .text.hashCode
+                                              .toString();
                                           final time = DateTime.now();
                                           DuAnDetail duan = DuAnDetail(
                                               tenDuAn: folderController.text
@@ -232,8 +275,13 @@ class DuAnScreenState extends State<DuAnScreen> {
                                               ngayTaoDuAn: FormatLayout
                                                   .formatTimeToString(
                                                       time, 'dd/MM/yyyy'),
-                                              type: 'Folder', id: id);
-                                          await FolderAPI.createFolder(duAnDetail.id,duAnDetail.tenDuAn,duan,currentStream);
+                                              type: 'Folder',
+                                              id: id);
+                                          await FolderAPI.createFolder(
+                                              duAnDetail.id,
+                                              duAnDetail.tenDuAn,
+                                              duan,
+                                              currentStream);
                                           Get.back();
                                         },
                                       ),
@@ -269,13 +317,13 @@ class DuAnScreenState extends State<DuAnScreen> {
                           });
                     },
                     label: "Tạo thư mục",
-                    child: Icon(Icons.folder)),
+                    child: const Icon(Icons.folder)),
                 SpeedDialChild(
                     onTap: () {
-                      Get.to(()=>TaoMauScreen());
+                      Get.to(() => TaoMauScreen());
                     },
                     label: "Tạo mẫu",
-                    child: Icon(Icons.file_copy))
+                    child: const Icon(Icons.file_copy))
               ],
             )));
   }
