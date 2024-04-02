@@ -1,16 +1,17 @@
+import 'package:ct240_doan/details/mau.dart';
 import 'package:ct240_doan/utils/app_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Widget FolderComponent(String tenDuAn, String ngayTao, String type, String id) {
+Widget SampleComponent(MauDetail mauDetail) {
   return SizedBox(
     width: AppLayout.getHeight(20),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Icon(
-          type == "Folder" ? Icons.folder : Icons.newspaper,
+        const Icon(
+          Icons.newspaper,
           color: Colors.blue,
         ),
         SizedBox(
@@ -22,9 +23,9 @@ Widget FolderComponent(String tenDuAn, String ngayTao, String type, String id) {
             child: Column(
               children: [
                 Text(
-                  tenDuAn,
+                  mauDetail.tenMau,
                 ),
-                Text(ngayTao),
+                Text(mauDetail.ngayLayMau),
               ],
             ),
           ),

@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
         key: scaffoldKey,
         drawer: DrawerComponent(),
         body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: [
             AppBarComponent(scaffoldKey),
             SizedBox(height: AppLayout.getHeight(30)),
@@ -64,8 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
                       final data = snapshot.data!.docs;
-                      data.forEach((element) {});
-                      return Container(
+                      for (var element in data) {}
+                      return SizedBox(
                         height: AppLayout.getHeight(150),
                         child: ListView.separated(
                           separatorBuilder: (context, index) {
@@ -78,14 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                                 onTap: () {
-                                  Get.to(() => DuAnScreen());
+                                  Get.to(() => const DuAnScreen());
                                 },
                                 child: ModelComponent());
                           },
                         ),
                       );
-                    } else
-                      return CircularProgressIndicator();
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
                   }),
             ),
             SizedBox(
@@ -106,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             SingleChildScrollView(
-              child: Container(
+              child: SizedBox(
                   height: AppLayout.getHeight(335),
                   child: StreamBuilder(
                       stream: firebaseFirestore
@@ -116,30 +117,32 @@ class _HomeScreenState extends State<HomeScreen> {
                         List<DuAnDetail> listDuAn = [];
                         if (snapshot.hasData && snapshot.data != null) {
                           final dataDuAn = snapshot.data!.docs;
-                          dataDuAn.forEach((element) {
+                          for (var element in dataDuAn) {
                             listDuAn.add(DuAnDetail.fromSnapshot(element));
-                          });
+                          }
                           return ListView.builder(
                               itemCount: listDuAn.length,
                               itemBuilder: (context, index) {
                                 return InkWell(
                                   onTap: () {
-                                    Get.to(() => DuAnScreen(),
+                                    Get.to(() => const DuAnScreen(),
                                         arguments: listDuAn[index]);
                                   },
                                   child: FolderComponent(
                                       listDuAn[index].tenDuAn,
                                       listDuAn[index].ngayTaoDuAn,
-                                      listDuAn[index].type),
+                                      listDuAn[index].type,
+                                      listDuAn[index].id),
                                 );
                               });
-                        } else
+                        } else {
                           return Container();
+                        }
                       })),
             )
           ]),
         ),
-        floatingActionButton: Container(
+        floatingActionButton: SizedBox(
             width: AppLayout.getWidth(40),
             height: AppLayout.getHeight(40),
             child: FloatingActionButton(
@@ -150,17 +153,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       return StatefulBuilder(
                           builder: (context, setStateForDialog) {
                         return AlertDialog(
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),
                           scrollable: true,
-                          title: Center(
+                          title: const Center(
                             child: Text(
                               "Dự án mới",
                               style: TextStyle(fontSize: 20),
                             ),
                           ),
-                          contentPadding: EdgeInsets.all(20),
+                          contentPadding: const EdgeInsets.all(20),
                           content: Column(
                             children: [
                               SizedBox(
@@ -168,13 +171,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: TextField(
                                   controller: duanController,
                                   decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(bottom: 10, left: 10),
+                                      contentPadding: const EdgeInsets.only(
+                                          bottom: 10, left: 10),
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(15),
-                                          borderSide:
-                                              BorderSide(color: Colors.blue)),
+                                          borderSide: const BorderSide(
+                                              color: Colors.blue)),
                                       hintText: "Nhập tên dự án mới",
                                       enabledBorder: OutlineInputBorder(
                                           borderRadius:
@@ -205,12 +208,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   onPressed: () async {
                                     final time = DateTime.now();
-                                    String id=duanController.text.hashCode.toString();
+                                    String id =
+                                        duanController.text.hashCode.toString();
                                     DuAnDetail duan = DuAnDetail(
                                         tenDuAn: duanController.text.toString(),
                                         ngayTaoDuAn:
                                             FormatLayout.formatTimeToString(
-                                                time, 'dd/MM/yyyy'),type: "Dự Án", id: id);
+                                                time, 'dd/MM/yyyy'),
+                                        type: "Dự Án",
+                                        id: id);
                                     await DuAnAPI.createDuAn(duan);
                                     Get.back();
                                   },
@@ -245,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     });
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             )),
       ),
     );

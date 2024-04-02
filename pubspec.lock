@@ -532,10 +532,7 @@ packages:
       sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
     version: "0.18.1"
-=======
-    version: "0.19.0"
   ionicons:
     dependency: "direct main"
     description:
@@ -544,7 +541,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
->>>>>>> 287d6bd40030cc8dc2ef867a15a6f27681434e1f
   js:
     dependency: transitive
     description:
