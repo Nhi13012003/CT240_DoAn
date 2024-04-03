@@ -6,6 +6,7 @@ import 'package:ct240_doan/components/sample_components.dart';
 import 'package:ct240_doan/consts/firebase_const.dart';
 import 'package:ct240_doan/details/duan.dart';
 import 'package:ct240_doan/details/mau.dart';
+import 'package:ct240_doan/details/stream_tagname.dart';
 import 'package:ct240_doan/screens/sample_detail.dart';
 import 'package:ct240_doan/screens/taomau_screen.dart';
 import 'package:ct240_doan/utils/format.dart';
@@ -28,9 +29,10 @@ class DuAnScreen extends StatefulWidget {
 }
 
 class DuAnScreenState extends State<DuAnScreen> {
-  CollectionReference<Map<dynamic, dynamic>>? currentStream;
+  late CollectionReference<Map<dynamic, dynamic>> currentStream;
   CollectionReference<Map<dynamic, dynamic>>? newStream;
   DuAnDetail duAnDetail = Get.arguments;
+  List<StreamTagName> listStreamTagName = [];
   List<String> listFolder = [];
   List<DuAnDetail> listId = [];
 
@@ -44,6 +46,9 @@ class DuAnScreenState extends State<DuAnScreen> {
         .doc(duAnDetail.id)
         .collection(duAnDetail.tenDuAn);
     listFolder.add(duAnDetail.tenDuAn);
+    StreamTagName streamTagName = StreamTagName(currentStream: currentStream,
+        tenChiMuc: duAnDetail.tenDuAn);
+    listStreamTagName.add(streamTagName);
   }
 
   void updateStream() {
@@ -55,12 +60,11 @@ class DuAnScreenState extends State<DuAnScreen> {
     }
   }
 
-  void refreshStream(List<dynamic> listMau) {
-    print('Hello các quần què');
-  }
-
   @override
   Widget build(BuildContext context) {
+    listStreamTagName.forEach((element) {
+      print(element.tenChiMuc);
+    });
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
@@ -89,115 +93,122 @@ class DuAnScreenState extends State<DuAnScreen> {
             ),
             body: Container(
                 child: Column(
-              children: [
-                SingleChildScrollView(
-                  child: Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    height: AppLayout.getHeight(30),
-                    child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                updateStream();
-                              });
-                            },
-                            child: Container(
-                              child: Center(
-                                child: Text(
-                                  listFolder[index],
-                                  style: GoogleFonts.openSans(
-                                      color: Colors.blue[900],
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Center(
-                            child: Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              size: 10,
-                            ),
-                          );
-                        },
-                        itemCount: listFolder.length),
-                  ),
-                ),
-                Divider(
-                  color: Colors.blue[900],
-                ),
-                SingleChildScrollView(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    height: AppLayout.getHeight(500),
-                    child: StreamBuilder(
-                      stream: currentStream!.snapshots(),
-                      builder: (context, snapshot) {
-                        List<DuAnDetail> list = [];
-                        List<MauDetail> listMau = [];
-                        late dynamic result = 'Hello';
-
-                        if (snapshot.hasData && snapshot.data != null) {
-                          final dataDuAn = snapshot.data!.docs;
-                          for (var element in dataDuAn) {
-                            DuAnDetail detail = DuAnDetail.fromSnapshot(element
-                                as DocumentSnapshot<Map<String, dynamic>>);
-                            list.add(detail);
-
-                            // Chỉ chuyển đổi thành MauDetail nếu type != 'Folder'
-                            if (detail.type != 'Folder') {
-                              listMau.add(MauDetail.fromSnapshot(element
-                                  as DocumentSnapshot<Map<String, dynamic>>));
-                            }
-                          }
-                          return ListView.builder(
-                            itemCount: list.length,
+                  children: [
+                    SingleChildScrollView(
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        height: AppLayout.getHeight(30),
+                        child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      listId.add(list[index]);
+                                onTap: () {
+                                  setState(() {
+                                    {
+                                      for(int i=index;i<listStreamTagName.length;i++)
+                                        {
+                                          listStreamTagName.removeAt(listStreamTagName.length-1);
+                                        }
+                                      print("do dai ${listStreamTagName.length}");
+                                      currentStream=listStreamTagName[index].currentStream;
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  child: Center(
+                                    child: Text(
+                                      listStreamTagName[index].tenChiMuc,
+                                      style: GoogleFonts.openSans(
+                                          color: Colors.blue[900],
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return const Center(
+                                child: Icon(
+                                  Icons.arrow_forward_ios_outlined,
+                                  size: 10,
+                                ),
+                              );
+                            },
+                            itemCount: listStreamTagName.length),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.blue[900],
+                    ),
+                    SingleChildScrollView(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        height: AppLayout.getHeight(500),
+                        child: StreamBuilder(
+                          stream: currentStream!.snapshots(),
+                          builder: (context, snapshot) {
+                            List<DuAnDetail> list = [];
+                            List<MauDetail> listMau = [];
 
-                                      listFolder.add(list[index].tenDuAn);
+                            if (snapshot.hasData && snapshot.data != null) {
+                              final dataDuAn = snapshot.data!.docs;
+                              for (var element in dataDuAn) {
+                                DuAnDetail detail = DuAnDetail.fromSnapshot(
+                                    element
+                                    as DocumentSnapshot<Map<String, dynamic>>);
+                                list.add(detail);
 
-                                      if (list[index].type != 'Folder') {
-                                        result = Get.to(
-                                            () => const SampleDetail(),
-                                            arguments: [
-                                              index,
-                                              listMau,
-                                              duAnDetail.tenDuAn,
-                                            ]);
-                                        print(result);
-                                      }
-                                      if (result == 'Hello') {
-                                        updateStream();
-                                      }
-                                    });
-                                  },
-                                  child: list[index].type == 'Folder'
-                                      ? FolderComponent(
+                                // Chỉ chuyển đổi thành MauDetail nếu type != 'Folder'
+                                if (detail.type != 'Folder') {
+                                  listMau.add(MauDetail.fromSnapshot(element
+                                  as DocumentSnapshot<Map<String, dynamic>>));
+                                }
+                              }
+                              return ListView.builder(
+                                itemCount: list.length,
+                                itemBuilder: (context, index) {
+                                  return InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          listId.add(list[index]);
+                                        });
+
+                                        if (list[index].type != 'Folder') {
+                                          Get.to(
+                                                  () => const SampleDetail(),
+                                              arguments: [
+                                                index,
+                                                listMau,
+                                                duAnDetail.tenDuAn,
+                                              ]);
+                                        }
+                                        else {
+                                          updateStream();
+                                          listStreamTagName.add(StreamTagName(
+                                              currentStream: currentStream,
+                                              tenChiMuc: list[index].tenDuAn));
+                                        }
+                                      },
+                                      child: list[index].type == 'Folder'
+                                          ? FolderComponent(
                                           list[index].tenDuAn,
                                           list[index].ngayTaoDuAn,
                                           list[index].type,
                                           list[index].id)
-                                      : SampleComponent(listMau[index]));
-                            },
-                          );
-                        } else {
-                          return Container();
-                        }
-                      },
+                                          : SampleComponent(listMau[index]));
+                                },
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            )),
+                  ],
+                )),
             floatingActionButton: SpeedDial(
               animatedIcon: AnimatedIcons.add_event,
               children: [
@@ -208,119 +219,121 @@ class DuAnScreenState extends State<DuAnScreen> {
                           builder: (context) {
                             return StatefulBuilder(
                                 builder: (context, setStateForDialog) {
-                              return AlertDialog(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
+                                  return AlertDialog(
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius:
                                         BorderRadius.all(Radius.circular(15))),
-                                scrollable: true,
-                                title: const Center(
-                                  child: Text(
-                                    "Thư mục mới",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ),
-                                contentPadding: const EdgeInsets.all(20),
-                                content: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: AppLayout.getHeight(45),
-                                      child: TextField(
-                                        controller: folderController,
-                                        decoration: InputDecoration(
-                                            contentPadding:
+                                    scrollable: true,
+                                    title: const Center(
+                                      child: Text(
+                                        "Thư mục mới",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    contentPadding: const EdgeInsets.all(20),
+                                    content: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: AppLayout.getHeight(45),
+                                          child: TextField(
+                                            controller: folderController,
+                                            decoration: InputDecoration(
+                                                contentPadding:
                                                 const EdgeInsets.only(
                                                     bottom: 10, left: 10),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderRadius:
+                                                focusedBorder: OutlineInputBorder(
+                                                    borderRadius:
                                                     BorderRadius.circular(15),
-                                                borderSide: const BorderSide(
-                                                    color: Colors.blue)),
-                                            hintText: "Nhập tên thư mục mới",
-                                            enabledBorder: OutlineInputBorder(
-                                                borderRadius:
+                                                    borderSide: const BorderSide(
+                                                        color: Colors.blue)),
+                                                hintText: "Nhập tên thư mục mới",
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderRadius:
                                                     BorderRadius.circular(15),
-                                                borderSide: BorderSide(
-                                                    color: Colors.blue[900] ??
-                                                        Colors.blue))),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: AppLayout.getHeight(10),
-                                    ),
-                                    SizedBox(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.blue,
-                                            shape: RoundedRectangleBorder(
-                                                side: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            fixedSize: Size(
-                                                AppLayout.getScreenWidth() *
-                                                    0.7,
-                                                AppLayout.getHeight(30))),
-                                        child: Text(
-                                          "Tạo thư mục mới",
-                                          style: GoogleFonts.openSans(
-                                              color: Colors.white),
+                                                    borderSide: BorderSide(
+                                                        color: Colors
+                                                            .blue[900] ??
+                                                            Colors.blue))),
+                                          ),
                                         ),
-                                        onPressed: () async {
-                                          String id = folderController
-                                              .text.hashCode
-                                              .toString();
-                                          final time = DateTime.now();
-                                          DuAnDetail duan = DuAnDetail(
-                                              tenDuAn: folderController.text
-                                                  .toString(),
-                                              ngayTaoDuAn: FormatLayout
-                                                  .formatTimeToString(
+                                        SizedBox(
+                                          height: AppLayout.getHeight(10),
+                                        ),
+                                        SizedBox(
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.blue,
+                                                shape: RoundedRectangleBorder(
+                                                    side: BorderSide.none,
+                                                    borderRadius:
+                                                    BorderRadius.circular(15)),
+                                                fixedSize: Size(
+                                                    AppLayout.getScreenWidth() *
+                                                        0.7,
+                                                    AppLayout.getHeight(30))),
+                                            child: Text(
+                                              "Tạo thư mục mới",
+                                              style: GoogleFonts.openSans(
+                                                  color: Colors.white),
+                                            ),
+                                            onPressed: () async {
+                                              String id = folderController
+                                                  .text.hashCode
+                                                  .toString();
+                                              final time = DateTime.now();
+                                              DuAnDetail duan = DuAnDetail(
+                                                  tenDuAn: folderController.text
+                                                      .toString(),
+                                                  ngayTaoDuAn: FormatLayout
+                                                      .formatTimeToString(
                                                       time, 'dd/MM/yyyy'),
-                                              type: 'Folder',
-                                              id: id);
-                                          await FolderAPI.createFolder(
-                                              duAnDetail.id,
-                                              duAnDetail.tenDuAn,
-                                              duan,
-                                              currentStream);
-                                          Get.back();
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                                side: BorderSide(
-                                                    color: Colors.blue[900] ??
-                                                        Colors.blue),
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            backgroundColor: Colors.white,
-                                            fixedSize: Size(
-                                                AppLayout.getScreenWidth() *
-                                                    0.7,
-                                                AppLayout.getHeight(30))),
-                                        child: Text(
-                                          "Hủy",
-                                          style: GoogleFonts.openSans(
-                                              color: Colors.blue[900]),
+                                                  type: 'Folder',
+                                                  id: id);
+                                              await FolderAPI.createFolder(
+                                                  duAnDetail.id,
+                                                  duAnDetail.tenDuAn,
+                                                  duan,
+                                                  currentStream);
+                                              Get.back();
+                                            },
+                                          ),
                                         ),
-                                        onPressed: () {
-                                          API.handleGoogleSignIn();
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            });
+                                        SizedBox(
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                    side: BorderSide(
+                                                        color: Colors
+                                                            .blue[900] ??
+                                                            Colors.blue),
+                                                    borderRadius:
+                                                    BorderRadius.circular(15)),
+                                                backgroundColor: Colors.white,
+                                                fixedSize: Size(
+                                                    AppLayout.getScreenWidth() *
+                                                        0.7,
+                                                    AppLayout.getHeight(30))),
+                                            child: Text(
+                                              "Hủy",
+                                              style: GoogleFonts.openSans(
+                                                  color: Colors.blue[900]),
+                                            ),
+                                            onPressed: () {
+                                              API.handleGoogleSignIn();
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                });
                           });
                     },
                     label: "Tạo thư mục",
                     child: const Icon(Icons.folder)),
                 SpeedDialChild(
                     onTap: () {
-                      Get.to(()=>TaoMauScreen(currentStream: currentStream,));
+                      Get.to(() => TaoMauScreen(currentStream: currentStream,));
                     },
                     label: "Tạo mẫu",
                     child: const Icon(Icons.file_copy))

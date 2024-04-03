@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ct240_doan/widgets/form_container_widget.dart';
 import 'package:ct240_doan/screens/sign_up_page.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -101,10 +103,7 @@ class LoginPage extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       // Điều hướng đến trang Đăng ký ở đây
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
-                      );
+                      Get.to(()=>SignUpPage());
                     },
                     child: Text(
                       "Đăng ký",

@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.blue[900]),
                                   ),
                                   onPressed: () {
-                                    API.handleGoogleSignIn();
+                                    Get.back();
                                   },
                                 ),
                               )
