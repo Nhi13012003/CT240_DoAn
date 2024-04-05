@@ -1,11 +1,32 @@
+import 'package:ct240_doan/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:ct240_doan/auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ct240_doan/widgets/form_container_widget.dart';
 import 'package:ct240_doan/screens/sign_up_page.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+
+  final FirebaseAuthService _auth = FirebaseAuthService();
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +49,7 @@ class LoginPage extends StatelessWidget {
                 height: 30,
               ),
               FormContainerWidget(
+                controller: _emailController,
                 hintText: "Email",
                 isPasswordField: false,
               ),
@@ -35,6 +57,7 @@ class LoginPage extends StatelessWidget {
                 height: 10,
               ),
               FormContainerWidget(
+                controller: _passwordController,
                 hintText: "Mật khẩu",
                 isPasswordField: true,
               ),
@@ -42,9 +65,7 @@ class LoginPage extends StatelessWidget {
                 height: 30,
               ),
               GestureDetector(
-                onTap: () {
-                  // Gọi hàm đăng nhập ở đây
-                },
+                onTap: _SignIn,
                 child: Container(
                   width: double.infinity,
                   height: 45,
@@ -121,4 +142,21 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+
+  void _SignIn() async {
+
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.SignIn(email, password);
+
+    if(user != null){
+      print("Tạo tài khoản thành công");
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+    } else{
+      print("Có lỗi đã xảy ra");
+    }
+
+  }
+
 }
