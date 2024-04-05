@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'firebase_options.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -26,6 +26,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return GetMaterialApp(
         locale: const Locale('vi', 'VN'),
         localizationsDelegates: [
@@ -38,5 +39,11 @@ class MainApp extends StatelessWidget {
           // Các ngôn ngữ khác nếu cần
         ],
     home: HomeScreen(),debugShowCheckedModeBanner: false,);
+=======
+    return const GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(body: LoginPage()),
+    );
+>>>>>>> d5a2edf93dfee3fe952d550430fe77e8974b21fb
   }
 }

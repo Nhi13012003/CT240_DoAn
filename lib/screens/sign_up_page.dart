@@ -1,10 +1,32 @@
+import 'package:ct240_doan/auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ct240_doan/screens/login_page.dart';
 import 'package:ct240_doan/widgets/form_container_widget.dart';
 import 'package:get/get.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+
+  final FirebaseAuthService _auth = FirebaseAuthService();
+
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +49,7 @@ class SignUpPage extends StatelessWidget {
                 height: 30,
               ),
               FormContainerWidget(
+                controller: _usernameController,
                 hintText: "Tên người dùng",
                 isPasswordField: false,
               ),
@@ -34,6 +57,7 @@ class SignUpPage extends StatelessWidget {
                 height: 10,
               ),
               FormContainerWidget(
+                controller: _emailController,
                 hintText: "Email",
                 isPasswordField: false,
               ),
@@ -41,6 +65,7 @@ class SignUpPage extends StatelessWidget {
                 height: 10,
               ),
               FormContainerWidget(
+                controller: _passwordController,
                 hintText: "Mật khẩu",
                 isPasswordField: true,
               ),
@@ -48,9 +73,7 @@ class SignUpPage extends StatelessWidget {
                 height: 30,
               ),
               GestureDetector(
-                onTap: () {
-                  // Điều hướng đến chức năng đăng ký ở đây
-                },
+                onTap: _SignUp,
                 child: Container(
                   width: double.infinity,
                   height: 45,
@@ -99,4 +122,21 @@ class SignUpPage extends StatelessWidget {
       ),
     );
   }
+
+  void _SignUp() async {
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.SignUp(email, password, username);
+
+    if(user != null){
+      print("Tạo tài khoản thành công");
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+    } else{
+      print("Có lỗi đã xảy ra");
+    }
+
+  }
+
 }
