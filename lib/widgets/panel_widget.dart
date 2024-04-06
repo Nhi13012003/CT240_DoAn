@@ -78,6 +78,9 @@ class PanelWidget extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
+            const Text('Người tạo: ',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(duAnDetail.nguoiTaoMau),
             const Text(
               'Photos',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -110,8 +113,8 @@ class PanelWidget extends StatelessWidget {
                               });
                         },
                         child: Container(
-                          height: 230,
-                          width: 170,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          width: MediaQuery.of(context).size.width * 0.25,
                           padding: const EdgeInsets.only(right: 5),
                           child: Image.asset(
                             path,

@@ -12,155 +12,6 @@ import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-// class SampleDetail extends StatefulWidget {
-//   const SampleDetail({super.key});
-
-//   @override
-//   State<SampleDetail> createState() => _SampleDetailState();
-// }
-
-// class _SampleDetailState extends State<SampleDetail> {
-//   var tenDuAn;
-//   late DuAnDetail sampleDetail;
-//   @override
-//   void initState() {
-//     super.initState();
-//     List<dynamic> argumentList = Get.arguments;
-//     sampleDetail = argumentList[0];
-//     tenDuAn = argumentList[1];
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         leading: IconButton(
-//             onPressed: () {
-//               Get.back();
-//             },
-//             icon: const Icon(
-//               Ionicons.chevron_back_outline,
-//               color: Colors.lightBlueAccent,
-//               size: 32,
-//             )),
-//         leadingWidth: 100,
-//       ),
-//       body: Column(
-//         children: [
-//           Container(
-//             alignment: Alignment.topLeft,
-//             margin: const EdgeInsets.only(left: 10),
-//             child: const Text(
-//               'Chi tiết mẫu',
-//               style: TextStyle(
-//                   fontSize: 33,
-//                   fontWeight: FontWeight.bold,
-//                   color: Color.fromARGB(255, 137, 202, 246)),
-//             ),
-//           ),
-//           Row(
-//             children: [
-//               Container(
-//                 margin: const EdgeInsets.only(left: 30),
-//                 width: 40,
-//                 height: 70,
-//                 decoration: const BoxDecoration(
-//                     color: Color.fromARGB(255, 163, 228, 243),
-//                     borderRadius: BorderRadius.all(Radius.circular(10))),
-//                 child: IconButton(
-//                   onPressed: () {},
-//                   icon: const Icon(Ionicons.chevron_back_outline),
-//                 ),
-//               ),
-//               Expanded(
-//                 flex: 3,
-//                 child: Center(
-//                   child: Container(
-//                     margin: const EdgeInsets.only(top: 10),
-//                     width: 370,
-//                     height: 470,
-//                     decoration: BoxDecoration(
-//                         color: Colors.blue[50],
-//                         border: Border.all(width: 1, color: Colors.grey)),
-//                     child: Image.asset(
-//                       'assets/C7N.jpg',
-//                       fit: BoxFit.cover,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               Container(
-//                 margin: const EdgeInsets.only(right: 30),
-//                 width: 40,
-//                 height: 70,
-//                 decoration: const BoxDecoration(
-//                     color: Color.fromARGB(255, 163, 228, 243),
-//                     borderRadius: BorderRadius.all(Radius.circular(10))),
-//                 child: IconButton(
-//                     onPressed: () {},
-//                     icon: const Icon(Ionicons.chevron_forward_outline)),
-//               ),
-//             ],
-//           ),
-//           Container(
-//             padding: const EdgeInsets.all(22),
-//             margin: const EdgeInsets.only(top: 10),
-//             child: Row(
-//               children: [
-//                 Expanded(
-//                     child: Text(
-//                   'Tên mẫu: ${sampleDetail.tenDuAn}',
-//                   style: const TextStyle(fontSize: 22, color: Colors.grey),
-//                 )),
-//                 Expanded(
-//                     child: Text(
-//                   'Dự án: $tenDuAn',
-//                   style: const TextStyle(fontSize: 22, color: Colors.grey),
-//                 ))
-//               ],
-//             ),
-//           ),
-//           Container(
-//             padding: const EdgeInsets.all(22),
-//             child: Row(
-//               children: [
-//                 Expanded(
-//                     child: Text(
-//                   'Loại: ${sampleDetail.type}',
-//                   style: const TextStyle(fontSize: 22, color: Colors.grey),
-//                 )),
-//               ],
-//             ),
-//           ),
-//           Container(
-//             padding: const EdgeInsets.all(22),
-//             child: Row(
-//               children: [
-//                 Expanded(
-//                     child: Text(
-//                   'Thời gian lấy mẫu: ${sampleDetail.ngayTaoDuAn}',
-//                   style: const TextStyle(fontSize: 22, color: Colors.grey),
-//                 )),
-//               ],
-//             ),
-//           ),
-//           Container(
-//             padding: const EdgeInsets.all(22),
-//             child: const Row(
-//               children: [
-//                 Expanded(
-//                     child: Text(
-//                   'Mô tả',
-//                   style: TextStyle(fontSize: 22, color: Colors.grey),
-//                 )),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 class SampleDetail extends StatefulWidget {
   const SampleDetail({super.key});
 
@@ -214,7 +65,9 @@ class _SampleDetailState extends State<SampleDetail> {
             ),
             onPressed: () {
               Get.to(
-                TaoMauScreen(currentStream: null,),
+                TaoMauScreen(
+                  currentStream: null,
+                ),
               );
             },
           ),
@@ -228,17 +81,18 @@ class _SampleDetailState extends State<SampleDetail> {
           ],
         ),
         body: SlidingUpPanel(
-          minHeight: 170,
-          maxHeight: MediaQuery.of(context).size.height - 400,
+          minHeight: MediaQuery.of(context).size.height * 0.2,
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
           parallaxEnabled: true,
           parallaxOffset: 0.5,
           controller: panelController,
           color: Colors.transparent,
           backdropTapClosesPanel: true,
           body: PageView(
-            children: imagePaths
+            children: sampleDetail[countIndex]
+                .listHinhAnh
                 .map((path) => Image.asset(
-                      path,
+                      path['path']!,
                       fit: BoxFit.cover,
                     ))
                 .toList(),

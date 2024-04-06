@@ -55,10 +55,6 @@ class DuAnScreenState extends State<DuAnScreen> {
     }
   }
 
-  void refreshStream(List<dynamic> listMau) {
-    print('Hello các quần què');
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -141,6 +137,7 @@ class DuAnScreenState extends State<DuAnScreen> {
                         List<DuAnDetail> list = [];
                         List<MauDetail> listMau = [];
                         late dynamic result = 'Hello';
+                        int countMau = 0;
 
                         if (snapshot.hasData && snapshot.data != null) {
                           final dataDuAn = snapshot.data!.docs;
@@ -158,35 +155,45 @@ class DuAnScreenState extends State<DuAnScreen> {
                           return ListView.builder(
                             itemCount: list.length,
                             itemBuilder: (context, index) {
+                              int mauIndex = 0;
+                              if (list[index].type != 'Folder') {
+                                countMau++;
+                                mauIndex = countMau - 1;
+                              }
                               return InkWell(
-                                  onTap: () {
-                                    setState(() {
+                                onTap: () {
+                                  setState(() {
+                                    if (list[index].type == 'Folder' ||
+                                        list[index].type == "DuAn") {
                                       listId.add(list[index]);
-
+                                      print("That True");
                                       listFolder.add(list[index].tenDuAn);
+                                    }
 
-                                      if (list[index].type != 'Folder') {
-                                        result = Get.to(
-                                            () => const SampleDetail(),
-                                            arguments: [
-                                              index,
-                                              listMau,
-                                              duAnDetail.tenDuAn,
-                                            ]);
-                                        print(result);
-                                      }
-                                      if (result == 'Hello') {
-                                        updateStream();
-                                      }
-                                    });
-                                  },
-                                  child: list[index].type == 'Folder'
-                                      ? FolderComponent(
-                                          list[index].tenDuAn,
-                                          list[index].ngayTaoDuAn,
-                                          list[index].type,
-                                          list[index].id)
-                                      : SampleComponent(listMau[index]));
+                                    if (list[index].type != 'Folder') {
+                                      result = Get.to(
+                                          () => const SampleDetail(),
+                                          arguments: [
+                                            mauIndex,
+                                            listMau,
+                                            duAnDetail.tenDuAn,
+                                          ]);
+                                      print(result);
+                                    }
+                                    if (result == 'Hello') {
+                                      updateStream();
+                                    }
+                                  });
+                                },
+                                child: list[index].type != "Folder"
+                                    ? SampleComponent(listMau[mauIndex])
+                                    : FolderComponent(
+                                        list[index].tenDuAn,
+                                        list[index].ngayTaoDuAn,
+                                        list[index].type,
+                                        list[index].id,
+                                      ),
+                              );
                             },
                           );
                         } else {
@@ -320,7 +327,9 @@ class DuAnScreenState extends State<DuAnScreen> {
                     child: const Icon(Icons.folder)),
                 SpeedDialChild(
                     onTap: () {
-                      Get.to(()=>TaoMauScreen(currentStream: currentStream,));
+                      Get.to(() => TaoMauScreen(
+                            currentStream: currentStream,
+                          ));
                     },
                     label: "Tạo mẫu",
                     child: const Icon(Icons.file_copy))

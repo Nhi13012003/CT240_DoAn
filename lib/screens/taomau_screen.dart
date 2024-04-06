@@ -25,7 +25,7 @@ class TaoMauScreen extends StatefulWidget {
 }
 
 class TaoMauScreenState extends State<TaoMauScreen> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final tenMauController = TextEditingController();
   final ngaylayMauController = TextEditingController();
   final diaDiemController = TextEditingController();
@@ -33,7 +33,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
   final moTaController = TextEditingController();
   final ghiChuController = TextEditingController();
   final imagePickerController = Get.put(ImagePickerController());
-  List<String> listPath = [];
+  List<Map<String, String>> listPath = [];
   List<String> listName = [];
 
   @override
@@ -51,7 +51,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
               title: Row(
                 children: [
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back,
                       color: Colors.white,
                     ),
@@ -71,7 +71,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
             ),
             body: SingleChildScrollView(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
                     SizedBox(
@@ -81,24 +81,24 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          Container(
+                          SizedBox(
                             height: AppLayout.getHeight(30),
                             child: TextFormField(
                               controller: tenMauController,
                               decoration: InputDecoration(
-                                  contentPadding:
-                                  EdgeInsets.only(bottom: 5, left: 10),
+                                  contentPadding: const EdgeInsets.only(
+                                      bottom: 5, left: 10),
                                   labelText: "Tên mẫu",
                                   border: OutlineInputBorder(
                                       borderSide:
-                                      BorderSide(color: Colors.blue),
+                                          const BorderSide(color: Colors.blue),
                                       borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
                           SizedBox(
                             height: AppLayout.getHeight(15),
                           ),
-                          Container(
+                          SizedBox(
                             height: AppLayout.getHeight(30),
                             child: TextField(
                               controller: ngaylayMauController,
@@ -106,51 +106,51 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                 selectedDate(context, ngaylayMauController);
                               },
                               decoration: InputDecoration(
-                                  prefixIconColor: MaterialStateColor
-                                      .resolveWith((states) =>
-                                  states.contains(MaterialState.focused)
-                                      ? Colors.deepPurple
-                                      : Colors.grey),
-                                  contentPadding:
-                                  EdgeInsets.only(bottom: 5, left: 10),
+                                  prefixIconColor:
+                                      MaterialStateColor.resolveWith((states) =>
+                                          states.contains(MaterialState.focused)
+                                              ? Colors.deepPurple
+                                              : Colors.grey),
+                                  contentPadding: const EdgeInsets.only(
+                                      bottom: 5, left: 10),
                                   labelText: "Ngày lấy mẫu",
                                   border: OutlineInputBorder(
                                       borderSide:
-                                      BorderSide(color: Colors.blue),
+                                          const BorderSide(color: Colors.blue),
                                       borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
                           SizedBox(
                             height: AppLayout.getHeight(20),
                           ),
-                          Container(
+                          SizedBox(
                             height: AppLayout.getHeight(30),
                             child: TextFormField(
                               controller: diaDiemController,
                               decoration: InputDecoration(
-                                  contentPadding:
-                                  EdgeInsets.only(bottom: 5, left: 10),
+                                  contentPadding: const EdgeInsets.only(
+                                      bottom: 5, left: 10),
                                   labelText: "Địa điểm",
                                   border: OutlineInputBorder(
                                       borderSide:
-                                      BorderSide(color: Colors.blue),
+                                          const BorderSide(color: Colors.blue),
                                       borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
                           SizedBox(
                             height: AppLayout.getHeight(20),
                           ),
-                          Container(
+                          SizedBox(
                             height: AppLayout.getHeight(30),
                             child: TextFormField(
                               controller: loaiMauController,
                               decoration: InputDecoration(
-                                  contentPadding:
-                                  EdgeInsets.only(bottom: 5, left: 10),
+                                  contentPadding: const EdgeInsets.only(
+                                      bottom: 5, left: 10),
                                   labelText: "Loại mẫu",
                                   border: OutlineInputBorder(
                                       borderSide:
-                                      BorderSide(color: Colors.blue),
+                                          const BorderSide(color: Colors.blue),
                                       borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
@@ -162,28 +162,28 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                               Expanded(
                                 child: Container(
                                   decoration:
-                                  BoxDecoration(border: Border.all()),
+                                      BoxDecoration(border: Border.all()),
                                   height: AppLayout.getHeight(150),
                                   child: ListView.builder(
                                       scrollDirection: Axis.vertical,
                                       itemCount: listName.length,
                                       itemBuilder: (context, index) {
                                         return Row(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .spaceAround,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             Text(index.toString()),
-                                            Icon(Icons.image),
+                                            const Icon(Icons.image),
                                             Expanded(
                                               child: Text(
                                                 listName[index],
-                                                overflow:
-                                                TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                           ],
                                         );
-                                      }),),
+                                      }),
+                                ),
                               ),
                               SizedBox(
                                 width: AppLayout.getWidth(10),
@@ -195,14 +195,15 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                       await Get.dialog(
                                           ImagePickerDialog(context));
                                       setState(() {
-                                        if (imagePickerController.imgPath
-                                            .value != '')
-                                          listPath.add(
-                                              imagePickerController.imgPath
-                                                  .value);
+                                        // if (imagePickerController
+                                        //         .imgPath.value !=
+                                        //     '') {
+                                        //   listPath.add(imagePickerController
+                                        //       .imgPath.value);
+                                        // }
                                       });
                                     },
-                                    child: CircleAvatar(
+                                    child: const CircleAvatar(
                                       child: Icon(Icons.camera),
                                     ),
                                   )
@@ -222,7 +223,8 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                   labelText: "Mô tả",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.blue),
+                                    borderSide:
+                                        const BorderSide(color: Colors.blue),
                                   )),
                             ),
                           ),
@@ -235,7 +237,8 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                   labelText: "Ghi chú",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.blue),
+                                    borderSide:
+                                        const BorderSide(color: Colors.blue),
                                   )),
                             ),
                           ),
@@ -243,10 +246,9 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue[900]),
                               onPressed: () {
-                                String id = tenMauController.text.hashCode
-                                    .toString();
-                                listPath.forEach((element) {
-                                });
+                                String id =
+                                    tenMauController.text.hashCode.toString();
+                                for (var element in listPath) {}
                                 MauDetail mauDetail = MauDetail(
                                     id,
                                     "Phạm Văn Nhí",
@@ -257,14 +259,14 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                     loaiMauController.text.toString(),
                                     moTaController.text.toString(),
                                     ghiChuController.text.toString());
-                                MauAPI.createMau(mauDetail,
-                                    widget.currentStream);
+                                MauAPI.createMau(
+                                    mauDetail, widget.currentStream);
                                 Get.back();
                               },
                               child: Text(
                                 "Tạo mẫu",
                                 style:
-                                GoogleFonts.openSans(color: Colors.white),
+                                    GoogleFonts.openSans(color: Colors.white),
                               )),
                           SizedBox(
                             height: AppLayout.getHeight(10),
@@ -279,11 +281,12 @@ class TaoMauScreenState extends State<TaoMauScreen> {
   }
 
   Future<void> selectedDate(BuildContext context, controller) async {
-    final DateTime? pickedDate = await showDatePicker(context: context,
+    final DateTime? pickedDate = await showDatePicker(
+        context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2002),
         lastDate: DateTime.now(),
-        locale: Locale('vi', "VN"));
+        locale: const Locale('vi', "VN"));
     if (pickedDate != null) {
       controller.text = pickedDate.toString().split(" ")[0];
     }

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<User?> SignUp(String email, String password, String username) async {
     try {
@@ -12,9 +12,15 @@ class FirebaseAuthService {
       );
 
       // Lưu thông tin về tên người dùng vào Firestore
-      await FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).set({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(credential.user!.uid)
+          .set({
         'email': email,
         'username': username,
+        'projectCounter': 0,
+        'birthday': '',
+        'avatar': '',
         // Các trường thông tin khác có thể được thêm vào đây
       });
 

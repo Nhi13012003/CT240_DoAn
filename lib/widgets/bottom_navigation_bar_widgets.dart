@@ -17,26 +17,29 @@ class BottomNavigationbarWidget extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) => BottomAppBar(
-        child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: onArrowBackPressed,
-                icon: const Icon(
-                  Ionicons.arrow_back_outline,
-                  size: 30,
-                ),
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      height: MediaQuery.of(context).size.height * 0.08,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              onPressed: onArrowBackPressed,
+              icon: const Icon(
+                Ionicons.arrow_back_outline,
+                size: 30,
               ),
-              IconButton(
-                  onPressed: onArrowForwardPressed,
-                  icon: const Icon(
-                    Ionicons.arrow_forward_outline,
-                    size: 30,
-                  )),
-            ],
-          ),
+            ),
+            IconButton(
+                onPressed: onArrowForwardPressed,
+                icon: const Icon(
+                  Ionicons.arrow_forward_outline,
+                  size: 30,
+                )),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }

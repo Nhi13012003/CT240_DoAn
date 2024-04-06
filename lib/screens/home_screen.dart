@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ct240_doan/apis/duan_api.dart';
 import 'package:ct240_doan/components/appbar_component.dart';
 import 'package:ct240_doan/components/drawer.dart';
 import 'package:ct240_doan/components/folder_component.dart';
 import 'package:ct240_doan/components/model_component.dart';
 import 'package:ct240_doan/consts/firebase_const.dart';
+import 'package:ct240_doan/details/userData.dart';
 import 'package:ct240_doan/utils/app_layout.dart';
 import 'package:ct240_doan/utils/format.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -26,12 +29,37 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final duanController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late User? currentUser;
+  UserDataDetail? userData;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser(); // Lấy dữ liệu của currentUser khi initState được gọi
+  }
+
+  Future<void> getCurrentUser() async {
+    currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      DocumentSnapshot<Map<String, dynamic>> userDataSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUser!.uid)
+              .get();
+      userData = UserDataDetail.fromSnapshot(userDataSnapshot);
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         key: scaffoldKey,
-        drawer: DrawerComponent(),
+        drawer: DrawerComponent(
+          userDataDetail: userData,
+          currentUser: currentUser,
+        ),
         body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: [
