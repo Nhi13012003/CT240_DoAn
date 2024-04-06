@@ -4,6 +4,7 @@ import 'package:ct240_doan/screens/home_screen.dart';
 import 'package:ct240_doan/screens/login_page.dart';
 import 'package:ct240_doan/screens/sample_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,7 +27,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return GetMaterialApp(
         locale: const Locale('vi', 'VN'),
         localizationsDelegates: [
@@ -38,12 +38,6 @@ class MainApp extends StatelessWidget {
           const Locale('vi', 'VN'), // Tiếng Việt
           // Các ngôn ngữ khác nếu cần
         ],
-    home: HomeScreen(),debugShowCheckedModeBanner: false,);
-=======
-    return const GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(body: LoginPage()),
-    );
->>>>>>> d5a2edf93dfee3fe952d550430fe77e8974b21fb
+    home: LoginPage(),debugShowCheckedModeBanner: false,);
   }
 }

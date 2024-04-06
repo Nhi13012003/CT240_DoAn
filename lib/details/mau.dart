@@ -4,7 +4,7 @@ class MauDetail {
   late String id;
   late String nguoiTaoMau;
   late String tenMau;
-  late List<String> listHinhAnh;
+  late List<Map<String,String>> listHinhAnh;
   late String ngayLayMau;
   late String diaDiem;
   late String loaiMau;

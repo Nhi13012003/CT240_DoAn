@@ -4,6 +4,7 @@ import 'package:ct240_doan/components/drawer.dart';
 import 'package:ct240_doan/components/folder_component.dart';
 import 'package:ct240_doan/components/model_component.dart';
 import 'package:ct240_doan/consts/firebase_const.dart';
+import 'package:ct240_doan/patterns/usersingleton.dart';
 import 'package:ct240_doan/utils/app_layout.dart';
 import 'package:ct240_doan/utils/format.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +27,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final duanController = TextEditingController();
+  String email = Get.arguments as String;
+  @override
+  void initState() {
+    UserSingleton userSingleton = UserSingleton();
+    userSingleton.getuser(email);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(

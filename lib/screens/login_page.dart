@@ -152,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if(user != null){
       print("Tạo tài khoản thành công");
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+      Get.to(()=>HomeScreen(),arguments: email);
     } else{
       print("Có lỗi đã xảy ra");
     }

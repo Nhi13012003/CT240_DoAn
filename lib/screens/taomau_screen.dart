@@ -14,6 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../details/img_mau.dart';
+import '../patterns/usersingleton.dart';
 
 class TaoMauScreen extends StatefulWidget {
   CollectionReference<Map<dynamic, dynamic>>? currentStream;
@@ -37,7 +38,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
   final imagePickerController = Get.put(ImagePickerController());
   List<ImageMau> listAnh = [];
   List<String> listName = [];
-
+  UserSingleton userSingleton = UserSingleton();
   @override
   void initState() {
     super.initState();
@@ -313,21 +314,25 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue[900]),
-                              onPressed: (){
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   String id = tenMauController.text.hashCode
                                       .toString();
-                                  List<String> listPath = [];
-                                  listAnh.forEach((element) async{
-                                    String path = await imagePickerController.StoreImage(
-                                        tenMauController.text.toString(),
-                                        element.tenAnh,
-                                        element.pathAnh);
-                                    listPath.add(path);
-                                  });
+                                  List<Map<String,String>> listPath = [];
+                                  for(int i=0;i<listAnh.length;i++)
+                                    {
+                                      String path = await imagePickerController.StoreImage(
+                                          tenMauController.text.toString(),
+                                          listAnh[i].tenAnh,
+                                          listAnh[i].pathAnh);
+                                      listPath.add({
+                                        "index":i.toString(),
+                                        "url":path,
+                                      });
+                                    }
                                   MauDetail mauDetail = MauDetail(
                                       id,
-                                      "Phạm Văn Nhí",
+                                      UserSingleton.email,
                                       tenMauController.text.toString(),
                                       ngaylayMauController.text.toString(),
                                       listPath,
@@ -335,8 +340,13 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                       loaiMauController.text.toString(),
                                 moTaController.text.toString(),
                                 ghiChuController.text.toString());
-                                MauAPI.createMau(mauDetail,
+                                await MauAPI.createMau(mauDetail,
                                 widget.currentStream);
+                                widget.currentStream!.doc(id).update(
+                                  {
+                                    "ListHinhAnh" : FieldValue.arrayUnion(listPath)
+                                  }
+                                );
                                 Get.back();
                               }
                               },
