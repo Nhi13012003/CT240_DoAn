@@ -26,10 +26,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> d7da0de55a68cd20f11e32dd51d1560dce867246
     return GetMaterialApp(
         locale: const Locale('vi', 'VN'),
         localizationsDelegates: [
@@ -42,14 +38,5 @@ class MainApp extends StatelessWidget {
           // Các ngôn ngữ khác nếu cần
         ],
     home: HomeScreen(),debugShowCheckedModeBanner: false,);
-<<<<<<< HEAD
-=======
-=======
-    return const GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(body: LoginPage()),
-    );
->>>>>>> d5a2edf93dfee3fe952d550430fe77e8974b21fb
->>>>>>> d7da0de55a68cd20f11e32dd51d1560dce867246
   }
 }
