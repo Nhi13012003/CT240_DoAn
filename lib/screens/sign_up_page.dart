@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ct240_doan/screens/login_page.dart';
 import 'package:ct240_doan/widgets/form_container_widget.dart';
+import 'package:get/get.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -101,10 +102,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                              (route) => false);
+                      Get.to(()=>LoginPage());
+
+
+
+
                     },
                     child: Text(
                       "Đăng nhập",

@@ -51,6 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> updateProjectCounter(int count) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    await users.doc(currentUser?.uid).update({'projectCounter': count});
+    setState(() {
+      userData!.projectCounter = count;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -235,6 +243,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.white),
                                   ),
                                   onPressed: () async {
+                                    late int count =
+                                        userData!.projectCounter + 1;
                                     final time = DateTime.now();
                                     String id =
                                         duanController.text.hashCode.toString();
@@ -244,8 +254,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             FormatLayout.formatTimeToString(
                                                 time, 'dd/MM/yyyy'),
                                         type: "Dự Án",
-                                        id: id);
+                                        id: id,
+                                        userId: currentUser!.uid);
                                     await DuAnAPI.createDuAn(duan);
+                                    updateProjectCounter(count);
                                     Get.back();
                                   },
                                 ),
@@ -269,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.blue[900]),
                                   ),
                                   onPressed: () {
-                                    API.handleGoogleSignIn();
+                                    Get.back();
                                   },
                                 ),
                               )

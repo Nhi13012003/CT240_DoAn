@@ -46,12 +46,19 @@ class MauDetail {
   factory MauDetail.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
     final data = documentSnapshot.data()!;
+    List<Map<String, String>> listHinhAnh = [];
+    if (data["ListHinhAnh"] != null) {
+      List<dynamic> rawList = data["ListHinhAnh"];
+      listHinhAnh =
+          rawList.map((item) => Map<String, String>.from(item)).toList();
+    }
+
     return MauDetail(
       data["Id"] ?? "",
       data["NguoiTaoMau"] ?? "",
       data["TenMau"] ?? "",
       data["NgayLayMau"] ?? "",
-      data["ListHinhAnh"] ?? "",
+      listHinhAnh,
       data["DiaDiem"] ?? "",
       data["LoaiMau"] ?? "",
       data["MoTa"] ?? "",

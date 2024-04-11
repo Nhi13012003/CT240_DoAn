@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class StatsWidget extends StatelessWidget {
   final MauDetail duAnDetail;
+
   final tenDuAn;
   const StatsWidget({
     super.key,

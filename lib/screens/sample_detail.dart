@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -27,6 +28,7 @@ class _SampleDetailState extends State<SampleDetail> {
   late List<String> imagePaths;
   final panelController = PanelController();
   int index = 0;
+  late bool checkOpen;
   var countIndex;
 
   @override
@@ -47,6 +49,30 @@ class _SampleDetailState extends State<SampleDetail> {
       'assets/Photo1.jpg',
       'assets/Photo2.jpg'
     ];
+    printUrls();
+    checkOpen = false;
+  }
+
+  void printUrls() {
+    // Kiểm tra nếu listHinhAnh là null hoặc rỗng
+    if (sampleDetail.isNotEmpty &&
+        sampleDetail[countIndex].listHinhAnh.isNotEmpty) {
+      print("Danh sách URL trong listHinhAnh:");
+      for (final imageMap in sampleDetail[countIndex].listHinhAnh) {
+        print(imageMap['url']);
+      }
+    } else {
+      print("listHinhAnh rỗng hoặc null.");
+    }
+  }
+
+  void OpenOrClosePanel() {
+    checkOpen = !checkOpen;
+    if (checkOpen == true) {
+      panelController.open();
+    } else {
+      panelController.close();
+    }
   }
 
   @override
@@ -61,7 +87,7 @@ class _SampleDetailState extends State<SampleDetail> {
             icon: const Icon(
               Ionicons.create_outline,
               size: 30,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               Get.to(
@@ -76,7 +102,11 @@ class _SampleDetailState extends State<SampleDetail> {
               onPressed: () {
                 Get.back(result: 'sampleDetail');
               },
-              icon: const Icon(Icons.close),
+              icon: const Icon(
+                Icons.close,
+                size: 30,
+                color: Colors.black,
+              ),
             )
           ],
         ),
@@ -91,9 +121,13 @@ class _SampleDetailState extends State<SampleDetail> {
           body: PageView(
             children: sampleDetail[countIndex]
                 .listHinhAnh
-                .map((path) => Image.asset(
-                      path['path']!,
+                .map((imageMap) => CachedNetworkImage(
+                      imageUrl: imageMap['url']!,
                       fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ))
                 .toList(),
             onPageChanged: (index) => setState(() {
@@ -102,9 +136,8 @@ class _SampleDetailState extends State<SampleDetail> {
           ),
           panelBuilder: (ScrollController scrollController) => PanelWidget(
             duAnDetail: sampleDetail[countIndex],
-            onClickedPanel: panelController.open,
+            onClickedPanel: OpenOrClosePanel,
             tenDuAn: tenDuAn,
-            imagePaths: imagePaths,
             controller: scrollController,
           ),
         ),
@@ -123,6 +156,8 @@ class _SampleDetailState extends State<SampleDetail> {
               }
             });
           },
+          currentIndex: countIndex,
+          listLenght: sampleDetail.length,
         ),
       ),
     );

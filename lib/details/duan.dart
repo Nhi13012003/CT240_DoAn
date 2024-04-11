@@ -5,14 +5,20 @@ class DuAnDetail {
   late String type;
   late String tenDuAn;
   late String ngayTaoDuAn;
+  late String userId;
   DuAnDetail(
-      {required this.id,required this.tenDuAn, required this.ngayTaoDuAn, required this.type});
+      {required this.id,
+      required this.tenDuAn,
+      required this.ngayTaoDuAn,
+      required this.type,
+      required this.userId});
   toJson() {
     return {
       "Id": tenDuAn.hashCode.toString(),
       "TenDuAn": tenDuAn,
       "Type": type,
-      "NgayTaoDuAn": ngayTaoDuAn
+      "NgayTaoDuAn": ngayTaoDuAn,
+      "UserId": userId,
     };
   }
 
@@ -21,14 +27,16 @@ class DuAnDetail {
     id = json["Id"].toString();
     tenDuAn = json["TenDuAn"].toString();
     ngayTaoDuAn = json["NgayTaoDuAn"].toString();
+    userId = json["UserId"].toString();
   }
   factory DuAnDetail.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
     final data = documentSnapshot.data()!;
     return DuAnDetail(
-        tenDuAn: data["TenDuAn"] == null ? "" : data["TenDuAn"],
-        ngayTaoDuAn: data["NgayTaoDuAn"] == null ? "" : data["NgayTaoDuAn"],
-        type: data["Type"] == null ? "" : data["Type"],
-        id: data["Id"]==null? "": data["Id"]);
+        tenDuAn: data["TenDuAn"] ?? "",
+        ngayTaoDuAn: data["NgayTaoDuAn"] ?? "",
+        type: data["Type"] ?? "",
+        id: data["Id"] ?? "",
+        userId: data["UserId"] ?? "");
   }
 }

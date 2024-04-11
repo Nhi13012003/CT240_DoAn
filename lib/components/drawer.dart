@@ -3,12 +3,16 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ct240_doan/consts/firebase_const.dart';
 import 'package:ct240_doan/details/userData.dart';
+import 'package:ct240_doan/screens/duan_screen.dart';
+import 'package:ct240_doan/screens/personal_project_list.dart';
 import 'package:ct240_doan/utils/pickAvatar.dart';
 import 'package:ct240_doan/widgets/edit_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ct240_doan/modal/modal_cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -32,17 +36,21 @@ class _DrawerComponentState extends State<DrawerComponent> {
 
   void selectAvatar() async {
     Uint8List img = await pickImage(ImageSource.gallery);
+    uploadCurrentAvatar(img);
     setState(() {
       _image = img;
     });
-    uploadCurrentAvatar(img);
+
     widget.userDataDetail!.avatar = _avatarUrl;
   }
 
-  void handleChangeName(String name) {
+  Future<void> handleChangeName(String name) async {
     setState(() {
       widget.userDataDetail!.username = name;
     });
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    await users.doc(currentUser?.uid).update({'username': name});
+    print("Name has changed become $name");
   }
 
   Future<void> uploadCurrentAvatar(Uint8List image) async {
@@ -59,6 +67,9 @@ class _DrawerComponentState extends State<DrawerComponent> {
     } else {
       print('No user signed in');
     }
+    setState(() {
+      widget.userDataDetail!.avatar = _avatarUrl;
+    });
   }
 
   @override
@@ -148,6 +159,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
                         child: IconButton(
                           onPressed: () {
                             showModalBottomSheet(
+                                isScrollControlled: true,
                                 context: context,
                                 builder: (BuildContext context) {
                                   return Modal_card(
@@ -198,20 +210,23 @@ class _DrawerComponentState extends State<DrawerComponent> {
                     child: Stack(children: [
                       Positioned(
                         right: 100,
-                        child: Text(
-                          '${widget.userDataDetail!.projectCounter.toString()} dự án',
-                          style:
-                              const TextStyle(fontSize: 15, color: Colors.grey),
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(() => const PersonalProjectList(),
+                                arguments: currentUser!.uid,
+                                transition: Transition.leftToRight);
+                          },
+                          borderRadius: BorderRadius.circular(10),
+                          child: Text(
+                            '${widget.userDataDetail!.projectCounter.toString()} dự án',
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.blue),
+                          ),
                         ),
                       )
                     ]),
                   ),
                   tilte: 'Số lượng dự án'),
-              Edititem(widget: Container(), tilte: 'Sinh nhật'),
-              Expanded(
-                  child: SizedBox(
-                child: Text(widget.userDataDetail!.birthday),
-              )),
             ],
           ),
         ),

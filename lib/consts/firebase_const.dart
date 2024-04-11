@@ -8,7 +8,7 @@ FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 User? currentUser = auth.currentUser;
 
 //collections
-const collectionUser = "Users";
+const collectionUser = "users";
 const collectionMessage = "Messages";
 const collectionFriend = "Friends";
 const collectionDuAn = "DuAn";

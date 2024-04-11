@@ -4,6 +4,8 @@ import 'package:ct240_doan/auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ct240_doan/widgets/form_container_widget.dart';
 import 'package:ct240_doan/screens/sign_up_page.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

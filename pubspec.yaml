@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^2.27.0
   firebase_database: ^10.4.9
   firebase_storage: ^11.6.9
+  
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -59,6 +60,10 @@ dependencies:
   ionicons: ^0.2.2
   sliding_up_panel: ^2.0.0+1
   cached_network_image: ^3.3.1
+  firebase_app_check: ^0.2.2
+  quickalert: ^1.1.0
+  full_screen_image: ^2.0.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
