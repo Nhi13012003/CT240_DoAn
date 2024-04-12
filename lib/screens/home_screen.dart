@@ -30,10 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String email = Get.arguments as String;
   @override
   void initState() {
-    UserSingleton userSingleton = UserSingleton();
-    userSingleton.getuser(email);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

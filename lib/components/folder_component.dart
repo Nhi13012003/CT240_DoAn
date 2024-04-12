@@ -20,6 +20,7 @@ Widget FolderComponent(String tenDuAn, String ngayTao, String type, String id) {
           child: Align(
             alignment: Alignment.topLeft,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   tenDuAn,
