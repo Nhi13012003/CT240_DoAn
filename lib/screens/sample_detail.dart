@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ct240_doan/details/duan.dart';
 import 'package:ct240_doan/details/mau.dart';
 import 'package:ct240_doan/screens/duan_screen.dart';
 import 'package:ct240_doan/screens/edit_profile.dart';
+import 'package:ct240_doan/screens/edit_sample_screen.dart';
 import 'package:ct240_doan/screens/taomau_screen.dart';
 import 'package:ct240_doan/widgets/bottom_navigation_bar_widgets.dart';
 import 'package:ct240_doan/widgets/panel_widget.dart';
@@ -22,6 +24,7 @@ class SampleDetail extends StatefulWidget {
 
 class _SampleDetailState extends State<SampleDetail> {
   List<MauDetail> sampleDetail = [];
+  CollectionReference<Map<dynamic, dynamic>>? currentStream;
 
   var tenDuAn;
 
@@ -30,6 +33,7 @@ class _SampleDetailState extends State<SampleDetail> {
   int index = 0;
   late bool checkOpen;
   var countIndex;
+  String idMau = '';
 
   @override
   void initState() {
@@ -39,7 +43,8 @@ class _SampleDetailState extends State<SampleDetail> {
 
     sampleDetail = argumentList[1];
     tenDuAn = argumentList[2];
-
+    currentStream = argumentList[3];
+    idMau = argumentList[4];
     imagePaths = [
       'assets/C7N.jpg',
       'assets/flashscreen.jpg',
@@ -91,8 +96,10 @@ class _SampleDetailState extends State<SampleDetail> {
             ),
             onPressed: () {
               Get.to(
-                TaoMauScreen(
-                  currentStream: null,
+                EditSampleScreen(
+                  currentStream: currentStream,
+                  sampleDetail: sampleDetail[countIndex],
+                  idMau: idMau,
                 ),
               );
             },
