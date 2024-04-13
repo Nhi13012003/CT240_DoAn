@@ -3,6 +3,7 @@ import 'package:ct240_doan/screens/flash_screen.dart';
 import 'package:ct240_doan/screens/home_screen.dart';
 import 'package:ct240_doan/screens/login_page.dart';
 import 'package:ct240_doan/screens/sample_detail.dart';
+import 'package:ct240_doan/screens/verify_email_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -28,7 +29,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
       locale: Locale('vi', 'VN'),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
@@ -39,8 +40,21 @@ class MainApp extends StatelessWidget {
         Locale('vi', 'VN'), // Tiếng Việt
         // Các ngôn ngữ khác nếu cần
       ],
-      home: LoginPage(),
       debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return VerifyEmailPage();
+            } else {
+              return LoginPage();
+            }
+          },
+        ),
+      ),
     );
   }
+
+
 }
