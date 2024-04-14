@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ct240_doan/controllers/imagepicker_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 
-Widget ImagePickerDialog(context) {
+Widget SelectImageSample(context) {
+  Uint8List? image;
   final imagePickerController = Get.put(ImagePickerController());
 
   var listTitle = ["máy ảnh", "thư viện", "hủy"];
@@ -30,18 +33,15 @@ Widget ImagePickerDialog(context) {
                     switch (index) {
                       case 0:
                         PickedFile? imageFile;
-                        final pickedFile = await ImagePicker()
+                        final image = await ImagePicker()
                             .pickImage(source: ImageSource.camera);
                         break;
 
                       case 1:
                         PickedFile? imageFile;
-                        final pickedFile = await ImagePicker()
+                        final image = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
-                        if (pickedFile != null) {
-                          imagePickerController.imgPath.value = pickedFile.path;
-                          imagePickerController.imgName.value = pickedFile.name;
-                        }
+
                         Get.back();
                         break;
                       case 2:

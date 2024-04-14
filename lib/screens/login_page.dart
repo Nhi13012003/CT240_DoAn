@@ -86,35 +86,6 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 10,
               ),
-              // GestureDetector(
-              //   onTap: () {
-              //     // Chuyển hướng đến trang đăng ký khi nhấn vào nút "Đăng ký"
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => SignUpPage()),
-              //     );
-              //   },
-              //   child: Container(
-              //     width: double.infinity,
-              //     height: 45,
-              //     decoration: BoxDecoration(
-              //       color: Colors.red,
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //     child: Center(
-              //       child: Text(
-              //         "Đăng nhập bằng google",
-              //         style: TextStyle(
-              //           color: Colors.white,
-              //           fontWeight: FontWeight.bold,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -156,8 +127,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       print("Tạo tài khoản thành công");
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
       print("Có lỗi đã xảy ra");
     }

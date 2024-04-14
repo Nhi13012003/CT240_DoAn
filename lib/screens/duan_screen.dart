@@ -141,6 +141,7 @@ class DuAnScreenState extends State<DuAnScreen> {
                         List<DuAnDetail> list = [];
                         List<MauDetail> listMau = [];
                         late dynamic result = 'Hello';
+                        List<String> IdList = [];
                         int countMau = 0;
 
                         if (snapshot.hasData && snapshot.data != null) {
@@ -149,6 +150,7 @@ class DuAnScreenState extends State<DuAnScreen> {
                             DuAnDetail detail = DuAnDetail.fromSnapshot(element
                                 as DocumentSnapshot<Map<String, dynamic>>);
                             list.add(detail);
+                            IdList.add(element.id);
 
                             // Chỉ chuyển đổi thành MauDetail nếu type != 'Folder'
                             if (detail.type != 'Folder') {
@@ -175,12 +177,15 @@ class DuAnScreenState extends State<DuAnScreen> {
                                     }
 
                                     if (list[index].type != 'Folder') {
+                                      print(IdList[mauIndex]);
                                       result = Get.to(
                                           () => const SampleDetail(),
                                           arguments: [
                                             mauIndex,
                                             listMau,
                                             duAnDetail.tenDuAn,
+                                            currentStream,
+                                            IdList[mauIndex],
                                           ]);
                                       print(result);
                                     }

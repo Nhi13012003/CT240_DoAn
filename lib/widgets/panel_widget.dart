@@ -78,8 +78,17 @@ class PanelWidget extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TitleText('Địa điểm lấy mẫu: '),
-                      textContent(duAnDetail.diaDiem),
+                      TitleText('Loại mẫu: '),
+                      textContent(duAnDetail.loaiMau),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Wrap(
+                    children: [
+                      TitleText('Địa điểm lấy mẫu: '), // Tiêu đề
+                      textContent(duAnDetail.diaDiem), // Nội dung
                     ],
                   ),
                   const SizedBox(
@@ -107,7 +116,7 @@ class PanelWidget extends StatelessWidget {
                   ),
                   Text(
                     duAnDetail.moTa,
-                    style: const TextStyle(fontSize: 19),
+                    style: const TextStyle(fontSize: 17),
                   ),
                   const SizedBox(height: 20.0),
                   const Text(

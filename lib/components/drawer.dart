@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ct240_doan/consts/firebase_const.dart';
 import 'package:ct240_doan/details/userData.dart';
 import 'package:ct240_doan/screens/duan_screen.dart';
+import 'package:ct240_doan/screens/login_page.dart';
 import 'package:ct240_doan/screens/personal_project_list.dart';
 import 'package:ct240_doan/utils/pickAvatar.dart';
 import 'package:ct240_doan/widgets/edit_item.dart';
@@ -227,6 +228,20 @@ class _DrawerComponentState extends State<DrawerComponent> {
                     ]),
                   ),
                   tilte: 'Số lượng dự án'),
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: IconButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                  },
+                  icon: Icon(
+                    Ionicons.log_out_outline,
+                    color: Colors.lightBlueAccent,
+                    size: 32,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
