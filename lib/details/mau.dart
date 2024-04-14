@@ -4,7 +4,7 @@ class MauDetail {
   late String id;
   late String nguoiTaoMau;
   late String tenMau;
-  late List<Map<String,String>> listHinhAnh;
+  late List<Map<String, String>> listHinhAnh;
   late String ngayLayMau;
   late String diaDiem;
   late String loaiMau;
@@ -13,13 +13,14 @@ class MauDetail {
 
   MauDetail(this.id, this.nguoiTaoMau, this.tenMau, this.ngayLayMau,
       this.listHinhAnh, this.diaDiem, this.loaiMau, this.moTa, this.ghiChu);
+
   toJson() {
     return {
       "Id": id,
       "NguoiTaoMau": nguoiTaoMau,
       "TenMau": tenMau,
-      "ListHinhAnh": listHinhAnh,
       "NgayLayMau": ngayLayMau,
+      "ListHinhAnh": listHinhAnh,
       "DiaDiem": diaDiem,
       "LoaiMau": loaiMau,
       "MoTa": moTa,
@@ -28,28 +29,40 @@ class MauDetail {
   }
 
   MauDetail.fromJson(Map<dynamic, dynamic> json) {
-    listHinhAnh = json["ListHinhAnh"];
     id = json["Id"].toString();
     nguoiTaoMau = json["NguoiTaoMau"].toString();
     tenMau = json["TenMau"].toString();
-    ngayLayMau = json["MgayLayMau"].toString();
+    ngayLayMau = json["NgayLayMau"].toString();
+    listHinhAnh = (json["ListHinhAnh"] as List<dynamic>)
+        .map((item) => Map<String, String>.from(item))
+        .toList(); // Initialize as empty list if null
+
     diaDiem = json["DiaDiem"].toString();
-    loaiMau = json["DiaDiem"].toString();
+    loaiMau = json["LoaiMau"].toString();
     moTa = json["MoTa"].toString();
     ghiChu = json["GhiChu"].toString();
   }
+
   factory MauDetail.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
     final data = documentSnapshot.data()!;
+    List<Map<String, String>> listHinhAnh = [];
+    if (data["ListHinhAnh"] != null) {
+      List<dynamic> rawList = data["ListHinhAnh"];
+      listHinhAnh =
+          rawList.map((item) => Map<String, String>.from(item)).toList();
+    }
+
     return MauDetail(
-        data["Id"] == null ? "" : data["Id"],
-        data["NguoiTaoMau"] == null ? "" : data["NguoiTaoMau"],
-        data["TenMau"] == null ? "" : data["TenMau"],
-        data["ListHinhAnh"] == null ? "" : data["ListHinhAnh"],
-        data["NgayLayMau"] == null ? "" : data["NgayLayMau"],
-        data["DiaDiem"] == null ? "" : data["DiaDiem"],
-        data["LoaiMau"] == null ? "" : data["LoaiMau"],
-        data["MoTa"] == null ? "" : data["MoTa"],
-        data["GhiChu"] == null ? "" : data["GhiChu"]);
+      data["Id"] ?? "",
+      data["NguoiTaoMau"] ?? "",
+      data["TenMau"] ?? "",
+      data["NgayLayMau"] ?? "",
+      listHinhAnh,
+      data["DiaDiem"] ?? "",
+      data["LoaiMau"] ?? "",
+      data["MoTa"] ?? "",
+      data["GhiChu"] ?? "",
+    );
   }
 }

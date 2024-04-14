@@ -6,6 +6,7 @@ import 'package:ct240_doan/components/sample_components.dart';
 import 'package:ct240_doan/consts/firebase_const.dart';
 import 'package:ct240_doan/details/duan.dart';
 import 'package:ct240_doan/details/mau.dart';
+import 'package:ct240_doan/screens/duan_screen.dart';
 import 'package:ct240_doan/screens/sample_detail.dart';
 import 'package:ct240_doan/screens/taomau_screen.dart';
 import 'package:ct240_doan/utils/format.dart';
@@ -18,36 +19,55 @@ import 'package:google_fonts/google_fonts.dart';
 import '../apis/folder_api.dart';
 import '../utils/app_layout.dart';
 
-class DuAnScreen extends StatefulWidget {
-  const DuAnScreen({super.key});
+class PersonalProjectList extends StatefulWidget {
+  const PersonalProjectList({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return DuAnScreenState();
-  }
-
-  static DuAnScreen create() {
-    return const DuAnScreen();
+    return PersonalProjectListState();
   }
 }
 
-class DuAnScreenState extends State<DuAnScreen> {
+class PersonalProjectListState extends State<PersonalProjectList> {
   CollectionReference<Map<dynamic, dynamic>>? currentStream;
   CollectionReference<Map<dynamic, dynamic>>? newStream;
-  DuAnDetail duAnDetail = Get.arguments;
+  String UserId = Get.arguments;
   List<String> listFolder = [];
   List<DuAnDetail> listId = [];
+  List<DuAnDetail> listProject = [];
 
   final folderController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    currentStream = firebaseFirestore
-        .collection(collectionDuAn)
-        .doc(duAnDetail.id)
-        .collection(duAnDetail.tenDuAn);
-    listFolder.add(duAnDetail.tenDuAn);
+    _initDuAnDetailList();
+  }
+
+  Future<void> _initDuAnDetailList() async {
+    try {
+      // Lấy danh sách dự án từ Firestore
+      final QuerySnapshot<
+          Map<String,
+              dynamic>> projectsSnapshot = await FirebaseFirestore.instance
+          .collection(
+              collectionDuAn) // Thay 'du_an_collection' bằng tên của collection trong Firestore của bạn
+          .where('UserId', isEqualTo: UserId)
+          .get();
+
+      // Chuyển kết quả truy vấn thành danh sách dự án
+      final List<DuAnDetail> projects = projectsSnapshot.docs.map((doc) {
+        return DuAnDetail.fromJson(doc
+            .data()); // Giả sử bạn có hàm fromJson để tạo đối tượng DuAnDetail từ dữ liệu Firestore
+      }).toList();
+
+      // Cập nhật danh sách dự án trong trạng thái
+      setState(() {
+        listProject = projects;
+      });
+    } catch (e) {
+      print('Error loading projects: $e');
+    }
   }
 
   void updateStream() {
@@ -78,7 +98,7 @@ class DuAnScreenState extends State<DuAnScreen> {
                     },
                   ),
                   Text(
-                    duAnDetail.tenDuAn,
+                    "Danh sách dự án",
                     style: GoogleFonts.openSans(
                         color: Colors.white,
                         fontSize: 15,
@@ -88,128 +108,49 @@ class DuAnScreenState extends State<DuAnScreen> {
               ),
             ),
             body: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: Column(
-              children: [
-                SingleChildScrollView(
-                  child: Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    height: AppLayout.getHeight(30),
-                    child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                updateStream();
-                              });
-                            },
-                            child: Container(
-                              child: Center(
-                                child: Text(
-                                  listFolder[index],
-                                  style: GoogleFonts.openSans(
-                                      color: Colors.blue[900],
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Center(
-                            child: Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              size: 10,
-                            ),
-                          );
-                        },
-                        itemCount: listFolder.length),
-                  ),
-                ),
-                Divider(
-                  color: Colors.blue[900],
-                ),
-                SingleChildScrollView(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    height: AppLayout.getHeight(500),
-                    child: StreamBuilder(
-                      stream: currentStream!.snapshots(),
-                      builder: (context, snapshot) {
-                        List<DuAnDetail> list = [];
-                        List<MauDetail> listMau = [];
-                        late dynamic result = 'Hello';
-                        int countMau = 0;
-
-                        if (snapshot.hasData && snapshot.data != null) {
-                          final dataDuAn = snapshot.data!.docs;
-                          for (var element in dataDuAn) {
-                            DuAnDetail detail = DuAnDetail.fromSnapshot(element
-                                as DocumentSnapshot<Map<String, dynamic>>);
-                            list.add(detail);
-
-                            // Chỉ chuyển đổi thành MauDetail nếu type != 'Folder'
-                            if (detail.type != 'Folder') {
-                              listMau.add(MauDetail.fromSnapshot(element
-                                  as DocumentSnapshot<Map<String, dynamic>>));
-                            }
-                          }
-                          return ListView.builder(
-                            itemCount: list.length,
-                            itemBuilder: (context, index) {
-                              int mauIndex = 0;
-                              if (list[index].type != 'Folder') {
-                                countMau++;
-                                mauIndex = countMau - 1;
-                              }
-                              return InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    if (list[index].type == 'Folder' ||
-                                        list[index].type == "DuAn") {
-                                      listId.add(list[index]);
-                                      print("That True");
-                                      listFolder.add(list[index].tenDuAn);
-                                    }
-
-                                    if (list[index].type != 'Folder') {
-                                      result = Get.to(
-                                          () => const SampleDetail(),
-                                          arguments: [
-                                            mauIndex,
-                                            listMau,
-                                            duAnDetail.tenDuAn,
-                                          ]);
-                                      print(result);
-                                    }
-                                    if (result == 'Hello') {
-                                      updateStream();
-                                    }
-                                  });
-                                },
-                                child: list[index].type != "Folder"
-                                    ? SampleComponent(listMau[mauIndex])
-                                    : FolderComponent(
-                                        context,
-                                        list[index].tenDuAn,
-                                        list[index].ngayTaoDuAn,
-                                        list[index].type,
-                                        list[index].id,
-                                      ),
-                              );
-                            },
-                          );
-                        } else {
-                          return Container();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            )),
+                  children: [
+                    SingleChildScrollView(
+                      child: SizedBox(
+                          height: AppLayout.getHeight(335),
+                          child: StreamBuilder(
+                              stream: firebaseFirestore
+                                  .collection(collectionDuAn)
+                                  .where('UserId', isEqualTo: UserId)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                List<DuAnDetail> listDuAn = [];
+                                if (snapshot.hasData && snapshot.data != null) {
+                                  final dataDuAn = snapshot.data!.docs;
+                                  for (var element in dataDuAn) {
+                                    listDuAn
+                                        .add(DuAnDetail.fromSnapshot(element));
+                                  }
+                                  return ListView.builder(
+                                      itemCount: listDuAn.length,
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            Get.to(() => const DuAnScreen(),
+                                                arguments: listDuAn[index]);
+                                          },
+                                          child: FolderComponent(
+                                              context,
+                                              listDuAn[index].tenDuAn,
+                                              listDuAn[index].ngayTaoDuAn,
+                                              listDuAn[index].type,
+                                              listDuAn[index].id),
+                                        );
+                                      });
+                                } else {
+                                  return Container();
+                                }
+                              })),
+                    )
+                  ],
+                )),
             floatingActionButton: SpeedDial(
               animatedIcon: AnimatedIcons.add_event,
               children: [
@@ -291,8 +232,8 @@ class DuAnScreenState extends State<DuAnScreen> {
                                               id: id,
                                               userId: '');
                                           await FolderAPI.createFolder(
-                                              duAnDetail.id,
-                                              duAnDetail.tenDuAn,
+                                              "duAnDetail[0].id",
+                                              "duAnDetail[0].tenDuAn",
                                               duan,
                                               currentStream);
                                           Get.back();

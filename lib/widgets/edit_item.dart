@@ -21,7 +21,7 @@ class Edititem extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 tilte,
-                style: const TextStyle(fontSize: 22, color: Colors.grey),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ),
           ),

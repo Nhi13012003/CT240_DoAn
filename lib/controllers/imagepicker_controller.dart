@@ -18,13 +18,8 @@ class ImagePickerController extends GetxController {
     Reference referenceRoot = firebaseStorage.ref();
     Reference referenceImage = referenceRoot.child(tenMau);
     Reference referenceStoreImage = referenceImage.child(tenAnh);
-    try {
       await referenceStoreImage.putFile(File(path));
       final url = await referenceStoreImage.getDownloadURL();
       return url;
-    } catch (e) {
-      print(e);
-      return "";
-    }
   }
 }

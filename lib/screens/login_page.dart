@@ -8,18 +8,17 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final FirebaseAuthService _auth = FirebaseAuthService();
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -33,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Đăng Nhập"),
+        title: const Text("Đăng Nhập"),
       ),
       body: Center(
         child: Padding(
@@ -41,11 +40,11 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Đăng Nhập",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               FormContainerWidget(
@@ -53,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "Email",
                 isPasswordField: false,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               FormContainerWidget(
@@ -61,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "Mật khẩu",
                 isPasswordField: true,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               GestureDetector(
@@ -73,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Đăng nhập",
                       style: TextStyle(
@@ -84,7 +83,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               // GestureDetector(
               //   onTap: () {
               //     // Chuyển hướng đến trang đăng ký khi nhấn vào nút "Đăng ký"
@@ -117,16 +118,20 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Chưa có tài khoản?"),
-                  SizedBox(
+                  const Text("Chưa có tài khoản?"),
+                  const SizedBox(
                     width: 5,
                   ),
                   GestureDetector(
                     onTap: () {
                       // Điều hướng đến trang Đăng ký ở đây
-                      Get.to(()=>SignUpPage());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpPage()),
+                      );
                     },
-                    child: Text(
+                    child: const Text(
                       "Đăng ký",
                       style: TextStyle(
                         color: Colors.blue,
@@ -144,19 +149,17 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _SignIn() async {
-
     String email = _emailController.text;
     String password = _passwordController.text;
 
     User? user = await _auth.SignIn(email, password);
 
-    if(user != null){
+    if (user != null) {
       print("Tạo tài khoản thành công");
-      Get.to(()=>HomeScreen(),arguments: email);
-    } else{
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+    } else {
       print("Có lỗi đã xảy ra");
     }
-
   }
-
 }

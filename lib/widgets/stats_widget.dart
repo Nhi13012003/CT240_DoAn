@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class StatsWidget extends StatelessWidget {
   final MauDetail duAnDetail;
+
   final tenDuAn;
   const StatsWidget({
     super.key,
@@ -19,27 +20,28 @@ class StatsWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          buidStatistic('Tên mẫu', duAnDetail.tenMau),
-          buidStatistic('Dự án', tenDuAn),
-          buidStatistic('Ngày tạo', duAnDetail.ngayLayMau)
+          buidStatistic(context, 'Tên mẫu', duAnDetail.tenMau),
+          buidStatistic(context, 'Dự án', tenDuAn),
+          buidStatistic(context, 'Ngày tạo', duAnDetail.ngayLayMau)
         ],
       ),
     );
   }
 
-  Widget buidStatistic(String text, String value) => Column(
+  Widget buidStatistic(BuildContext context, String text, String value) =>
+      Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             text,
-            style: const TextStyle(color: Colors.white, fontSize: 25),
+            style: const TextStyle(color: Colors.white, fontSize: 17),
           ),
           Text(
             value,
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: 17,
             ),
           ),
           const SizedBox(

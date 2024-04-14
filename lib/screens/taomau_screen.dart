@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ct240_doan/apis/mau_api.dart';
 import 'package:ct240_doan/components/imagepicker_dialog_component.dart';
 import 'package:ct240_doan/components/showtoast_component.dart';
+import 'package:ct240_doan/consts/firebase_const.dart';
 import 'package:ct240_doan/controllers/imagepicker_controller.dart';
 import 'package:ct240_doan/details/mau.dart';
 import 'package:ct240_doan/details/mau.dart';
@@ -14,7 +15,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../details/img_mau.dart';
 import '../patterns/usersingleton.dart';
 
@@ -30,7 +30,7 @@ class TaoMauScreen extends StatefulWidget {
 }
 
 class TaoMauScreenState extends State<TaoMauScreen> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final tenMauController = TextEditingController();
   final ngaylayMauController = TextEditingController();
   final diaDiemController = TextEditingController();
@@ -55,7 +55,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
               title: Row(
                 children: [
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back,
                       color: Colors.white,
                     ),
@@ -75,7 +75,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
             ),
             body: SingleChildScrollView(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
                     SizedBox(
@@ -91,6 +91,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                 if (value!.isEmpty) {
                                   return "Vui lòng không bỏ trống";
                                 }
+                                return null;
                               },
                               controller: tenMauController,
                               decoration: InputDecoration(
@@ -98,10 +99,10 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                     Icons.content_copy_outlined,
                                     color: Colors.blue[900],
                                   ),
-                                  contentPadding: EdgeInsets.only(
+                                  contentPadding: const EdgeInsets.only(
                                       bottom: 5, left: 10, top: 5),
                                   labelText: "Tên mẫu",
-                                  enabledBorder: OutlineInputBorder(
+                                  enabledBorder: const OutlineInputBorder(
                                       borderSide:
                                           BorderSide(color: Colors.blue)),
                                   border: OutlineInputBorder(
@@ -124,6 +125,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                   if (value!.isEmpty) {
                                     return "Vui lòng chọn ngày";
                                   }
+                                  return null;
                                 },
                                 controller: ngaylayMauController,
                                 decoration: InputDecoration(
@@ -137,13 +139,13 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                                     MaterialState.focused)
                                                 ? Colors.deepPurple
                                                 : Colors.grey),
-                                    contentPadding: EdgeInsets.only(
+                                    contentPadding: const EdgeInsets.only(
                                         bottom: 5, left: 10, top: 5),
                                     labelText: "Ngày lấy mẫu",
-                                    border: OutlineInputBorder(
+                                    border: const OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.blue)),
-                                    enabledBorder: OutlineInputBorder(
+                                    enabledBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color:
                                               Colors.blue ?? Colors.deepPurple),
@@ -158,18 +160,19 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                   if (value!.isEmpty) {
                                     return "Vui lòng nhập địa chỉ";
                                   }
+                                  return null;
                                 },
                                 controller: diaDiemController,
                                 decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
+                                    contentPadding: const EdgeInsets.only(
                                         bottom: 5, left: 10, top: 5),
                                     labelText: "Địa điểm",
                                     prefixIcon: Icon(Icons.map_rounded,
                                         color: Colors.blue[900]),
-                                    border: OutlineInputBorder(
+                                    border: const OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.blue)),
-                                    enabledBorder: OutlineInputBorder(
+                                    enabledBorder: const OutlineInputBorder(
                                         borderSide: BorderSide(
                                             color: Colors.blue ??
                                                 Colors.deepPurple)))),
@@ -183,18 +186,19 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                   if (value!.isEmpty) {
                                     return "Vui lòng nhập loại mẫu";
                                   }
+                                  return null;
                                 },
                                 controller: loaiMauController,
                                 decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.category_outlined,
                                         color: Colors.blue[900]),
-                                    contentPadding: EdgeInsets.only(
+                                    contentPadding: const EdgeInsets.only(
                                         bottom: 5, left: 10, top: 5),
                                     labelText: "Loại mẫu",
-                                    border: OutlineInputBorder(
+                                    border: const OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.blue)),
-                                    enabledBorder: OutlineInputBorder(
+                                    enabledBorder: const OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.blue)))),
                           ),
@@ -227,7 +231,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                             SizedBox(
                                               width: AppLayout.getWidth(5),
                                             ),
-                                            Icon(
+                                            const Icon(
                                               Icons.image_outlined,
                                               color: Colors.deepPurple,
                                             ),
@@ -237,7 +241,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                             Expanded(
                                               child: Text(
                                                 listAnh[index].tenAnh,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.deepPurple),
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -273,7 +277,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                         }
                                       });
                                     },
-                                    child: CircleAvatar(
+                                    child: const CircleAvatar(
                                       child: Icon(Icons.camera),
                                     ),
                                   )
@@ -289,7 +293,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                               controller: moTaController,
                               maxLength: 150,
                               maxLines: 3,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   labelText: "Mô tả",
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.blue),
@@ -304,7 +308,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                               controller: ghiChuController,
                               maxLength: 150,
                               maxLines: 3,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   labelText: "Ghi chú",
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.blue),
@@ -319,15 +323,27 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                   backgroundColor: Colors.blue[900]),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      });
                                   String id =
                                       tenMauController.text.hashCode.toString();
                                   List<Map<String, String>> listPath = [];
-                                  listPath =
-                                      await MauAPI.startisolateUploadImages(
-                                          listAnh);
+                                  for (int i = 0; i < listAnh.length; i++) {
+                                    String url =
+                                        await ImagePickerController.StoreImage(
+                                            listAnh[i].tenMau,
+                                            listAnh[i].tenAnh,
+                                            listAnh[i].pathAnh);
+                                    listPath.add(
+                                        {"index": i.toString(), "url": url});
+                                  }
                                   MauDetail mauDetail = MauDetail(
                                       id,
-                                      "Pham Van Nhi",
+                                      currentUser!.email.toString(),
                                       tenMauController.text.toString(),
                                       ngaylayMauController.text.toString(),
                                       listPath,
@@ -344,11 +360,12 @@ class TaoMauScreenState extends State<TaoMauScreen> {
                                     });
                                     ShowToastComponent.showToastSuccess(
                                         "Tạo mẫu thành công");
+                                    Get.back();
+                                    Get.back();
                                   } catch (e) {
                                     ShowToastComponent.showToastSuccess(
                                         "Tạo mẫu thất bại");
                                   }
-                                  Get.back();
                                 }
                               },
                               child: Text(
@@ -374,7 +391,7 @@ class TaoMauScreenState extends State<TaoMauScreen> {
         initialDate: DateTime.now(),
         firstDate: DateTime(2002),
         lastDate: DateTime.now(),
-        locale: Locale('vi', "VN"));
+        locale: const Locale('vi', "VN"));
     if (pickedDate != null) {
       controller.text = pickedDate.toString().split(" ")[0];
     }

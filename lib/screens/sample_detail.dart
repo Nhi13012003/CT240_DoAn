@@ -9,158 +9,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-// class SampleDetail extends StatefulWidget {
-//   const SampleDetail({super.key});
-
-//   @override
-//   State<SampleDetail> createState() => _SampleDetailState();
-// }
-
-// class _SampleDetailState extends State<SampleDetail> {
-//   var tenDuAn;
-//   late DuAnDetail sampleDetail;
-//   @override
-//   void initState() {
-//     super.initState();
-//     List<dynamic> argumentList = Get.arguments;
-//     sampleDetail = argumentList[0];
-//     tenDuAn = argumentList[1];
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         leading: IconButton(
-//             onPressed: () {
-//               Get.back();
-//             },
-//             icon: const Icon(
-//               Ionicons.chevron_back_outline,
-//               color: Colors.lightBlueAccent,
-//               size: 32,
-//             )),
-//         leadingWidth: 100,
-//       ),
-//       body: Column(
-//         children: [
-//           Container(
-//             alignment: Alignment.topLeft,
-//             margin: const EdgeInsets.only(left: 10),
-//             child: const Text(
-//               'Chi tiết mẫu',
-//               style: TextStyle(
-//                   fontSize: 33,
-//                   fontWeight: FontWeight.bold,
-//                   color: Color.fromARGB(255, 137, 202, 246)),
-//             ),
-//           ),
-//           Row(
-//             children: [
-//               Container(
-//                 margin: const EdgeInsets.only(left: 30),
-//                 width: 40,
-//                 height: 70,
-//                 decoration: const BoxDecoration(
-//                     color: Color.fromARGB(255, 163, 228, 243),
-//                     borderRadius: BorderRadius.all(Radius.circular(10))),
-//                 child: IconButton(
-//                   onPressed: () {},
-//                   icon: const Icon(Ionicons.chevron_back_outline),
-//                 ),
-//               ),
-//               Expanded(
-//                 flex: 3,
-//                 child: Center(
-//                   child: Container(
-//                     margin: const EdgeInsets.only(top: 10),
-//                     width: 370,
-//                     height: 470,
-//                     decoration: BoxDecoration(
-//                         color: Colors.blue[50],
-//                         border: Border.all(width: 1, color: Colors.grey)),
-//                     child: Image.asset(
-//                       'assets/C7N.jpg',
-//                       fit: BoxFit.cover,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               Container(
-//                 margin: const EdgeInsets.only(right: 30),
-//                 width: 40,
-//                 height: 70,
-//                 decoration: const BoxDecoration(
-//                     color: Color.fromARGB(255, 163, 228, 243),
-//                     borderRadius: BorderRadius.all(Radius.circular(10))),
-//                 child: IconButton(
-//                     onPressed: () {},
-//                     icon: const Icon(Ionicons.chevron_forward_outline)),
-//               ),
-//             ],
-//           ),
-//           Container(
-//             padding: const EdgeInsets.all(22),
-//             margin: const EdgeInsets.only(top: 10),
-//             child: Row(
-//               children: [
-//                 Expanded(
-//                     child: Text(
-//                   'Tên mẫu: ${sampleDetail.tenDuAn}',
-//                   style: const TextStyle(fontSize: 22, color: Colors.grey),
-//                 )),
-//                 Expanded(
-//                     child: Text(
-//                   'Dự án: $tenDuAn',
-//                   style: const TextStyle(fontSize: 22, color: Colors.grey),
-//                 ))
-//               ],
-//             ),
-//           ),
-//           Container(
-//             padding: const EdgeInsets.all(22),
-//             child: Row(
-//               children: [
-//                 Expanded(
-//                     child: Text(
-//                   'Loại: ${sampleDetail.type}',
-//                   style: const TextStyle(fontSize: 22, color: Colors.grey),
-//                 )),
-//               ],
-//             ),
-//           ),
-//           Container(
-//             padding: const EdgeInsets.all(22),
-//             child: Row(
-//               children: [
-//                 Expanded(
-//                     child: Text(
-//                   'Thời gian lấy mẫu: ${sampleDetail.ngayTaoDuAn}',
-//                   style: const TextStyle(fontSize: 22, color: Colors.grey),
-//                 )),
-//               ],
-//             ),
-//           ),
-//           Container(
-//             padding: const EdgeInsets.all(22),
-//             child: const Row(
-//               children: [
-//                 Expanded(
-//                     child: Text(
-//                   'Mô tả',
-//                   style: TextStyle(fontSize: 22, color: Colors.grey),
-//                 )),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 class SampleDetail extends StatefulWidget {
   const SampleDetail({super.key});
 
@@ -176,6 +28,7 @@ class _SampleDetailState extends State<SampleDetail> {
   late List<String> imagePaths;
   final panelController = PanelController();
   int index = 0;
+  late bool checkOpen;
   var countIndex;
 
   @override
@@ -196,6 +49,30 @@ class _SampleDetailState extends State<SampleDetail> {
       'assets/Photo1.jpg',
       'assets/Photo2.jpg'
     ];
+    printUrls();
+    checkOpen = false;
+  }
+
+  void printUrls() {
+    // Kiểm tra nếu listHinhAnh là null hoặc rỗng
+    if (sampleDetail.isNotEmpty &&
+        sampleDetail[countIndex].listHinhAnh.isNotEmpty) {
+      print("Danh sách URL trong listHinhAnh:");
+      for (final imageMap in sampleDetail[countIndex].listHinhAnh) {
+        print(imageMap['url']);
+      }
+    } else {
+      print("listHinhAnh rỗng hoặc null.");
+    }
+  }
+
+  void OpenOrClosePanel() {
+    checkOpen = !checkOpen;
+    if (checkOpen == true) {
+      panelController.open();
+    } else {
+      panelController.close();
+    }
   }
 
   @override
@@ -210,11 +87,13 @@ class _SampleDetailState extends State<SampleDetail> {
             icon: const Icon(
               Ionicons.create_outline,
               size: 30,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               Get.to(
-                TaoMauScreen(currentStream: null,),
+                TaoMauScreen(
+                  currentStream: null,
+                ),
               );
             },
           ),
@@ -223,23 +102,32 @@ class _SampleDetailState extends State<SampleDetail> {
               onPressed: () {
                 Get.back(result: 'sampleDetail');
               },
-              icon: const Icon(Icons.close),
+              icon: const Icon(
+                Icons.close,
+                size: 30,
+                color: Colors.black,
+              ),
             )
           ],
         ),
         body: SlidingUpPanel(
-          minHeight: 170,
-          maxHeight: MediaQuery.of(context).size.height - 400,
+          minHeight: MediaQuery.of(context).size.height * 0.2,
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
           parallaxEnabled: true,
           parallaxOffset: 0.5,
           controller: panelController,
           color: Colors.transparent,
           backdropTapClosesPanel: true,
           body: PageView(
-            children: imagePaths
-                .map((path) => Image.asset(
-                      path,
+            children: sampleDetail[countIndex]
+                .listHinhAnh
+                .map((imageMap) => CachedNetworkImage(
+                      imageUrl: imageMap['url']!,
                       fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          Center(child: const CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ))
                 .toList(),
             onPageChanged: (index) => setState(() {
@@ -248,9 +136,8 @@ class _SampleDetailState extends State<SampleDetail> {
           ),
           panelBuilder: (ScrollController scrollController) => PanelWidget(
             duAnDetail: sampleDetail[countIndex],
-            onClickedPanel: panelController.open,
+            onClickedPanel: OpenOrClosePanel,
             tenDuAn: tenDuAn,
-            imagePaths: imagePaths,
             controller: scrollController,
           ),
         ),
@@ -269,6 +156,8 @@ class _SampleDetailState extends State<SampleDetail> {
               }
             });
           },
+          currentIndex: countIndex,
+          listLenght: sampleDetail.length,
         ),
       ),
     );
